@@ -1,0 +1,14 @@
+language: python
+python:
+  - "3.4"
+# command to install dependencies
+install:
+  - 
+  -
+env:
+  -
+# command to run tests
+script:
+
+after_success:
+  -
