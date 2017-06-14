@@ -3,7 +3,7 @@ python:
   - "3.4"
 # command to install dependencies
 install:
-  - 
+  - pip install coveralls
   -
 env:
   -
@@ -11,4 +11,4 @@ env:
 script:
 
 after_success:
-  -
+  - coveralls
