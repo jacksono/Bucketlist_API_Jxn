@@ -2,7 +2,7 @@
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
-from app import db
+from bucketlist.app import db
 
 
 class User(db.Model):
@@ -41,9 +41,9 @@ class Bucketlist(db.Model):
     date_modified = db.Column(db.DateTime,
                               onupdate=datetime.now)
 
-    created_by = db.Column(db.Integer, db.ForeignKey("users.id"))
+    created_by = db.Column(db.Integer, db.ForeignKey("user.id"))
     user = db.relationship("User",
-                           backref=db.backref("users", lazy="dynamic"))
+                           backref=db.backref("user", lazy="dynamic"))
 
     items = db.relationship("Item",
                             backref=db.backref("bucketlist"))
@@ -63,11 +63,11 @@ class Item(db.Model):
                               onupdate=datetime.now)
     done = db.Column(db.Boolean, default=False)
 
-    created_by = db.Column(db.Integer, db.ForeignKey("users.id"))
+    created_by = db.Column(db.Integer, db.ForeignKey("user.id"))
     user = db.relationship("User",
-                           backref=db.backref("items", lazy="dynamic"))
+                           backref=db.backref("item", lazy="dynamic"))
 
-    bucketlist_id = db.Column(db.Integer, db.ForeignKey("bucketlists.id"))
+    bucketlist_id = db.Column(db.Integer, db.ForeignKey("bucketlist.id"))
 
     def __repr__(self):
         """Enable printing of the Bucketlist Item name ."""
