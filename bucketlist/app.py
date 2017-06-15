@@ -2,7 +2,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from configuration.config import app_config
-
+from flask.ext.restful import Api
 
 db = SQLAlchemy()
 
@@ -16,3 +16,4 @@ def create_app(configuration):
 
 
 app = create_app("development")
+api = Api(app=app, prefix="/api/v1")
