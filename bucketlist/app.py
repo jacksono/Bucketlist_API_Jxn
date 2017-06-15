@@ -2,7 +2,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from configuration.config import app_config
-from flask.ext.restful import Api
+from flask_restful import Api
 
 db = SQLAlchemy()
 
