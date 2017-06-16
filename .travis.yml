@@ -4,11 +4,11 @@ python:
 # command to install dependencies
 install:
   - pip install coveralls
-  -
+  - pip install -r requirments.txt
 env:
   -
 # command to run tests
 script:
-
+  - nosetests --with-coverage
 after_success:
   - coveralls

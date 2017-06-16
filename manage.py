@@ -3,7 +3,7 @@
 from bucketlist.app import db, app
 from flask_script import Manager, prompt_bool
 from flask_migrate import Migrate, MigrateCommand
-from bucketlist.models import User, Bucketlist, Item
+from bucketlist.models import User, Bucketlist, Item # noqa
 
 # Manager instance
 manager = Manager(app)
@@ -26,8 +26,6 @@ def dropdb():
     if prompt_bool("Are you sure you want to loose all your data?"):
         db.drop_all()
         print("Dropped the database")
-
-
 
 
 if __name__ == "__main__":
