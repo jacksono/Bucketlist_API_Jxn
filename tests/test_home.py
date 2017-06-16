@@ -12,15 +12,15 @@ class TestHomeRoute(TestCase):
     """Class to hold test cases for the home route."""
 
     def create_app(self):
-        """ Returns app """
+        """Return the app."""
         return app
 
     def setUp(self):
-        """ Create test database and set up test client """
+        """Set up test client."""
         self.app = app.test_client()
 
     def test_home_route_shows_correct_message(self):
-            """Test response to the home route."""
+            """Test response to the home route and the message displayed."""
             r = self.app.get("/api/v1/")
             self.assertEqual(r.status_code, 200)
             output = json.loads(r.data.decode())
