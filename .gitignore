@@ -6,4 +6,6 @@
 /__pycache__
 *.pyc
 
-
+# ignore coverage files
+.coverage
+.coveragerc

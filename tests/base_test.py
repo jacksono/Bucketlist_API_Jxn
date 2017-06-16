@@ -22,12 +22,12 @@ class BaseTest(TestCase):
         self.app = app.test_client()
         db.create_all()
         user = User(username="user", password="password")
+
         bucketlist = Bucketlist(title="Travel",
                                 description="Places I have to visit",
                                 created_by=1)
 
-        item = Item(title="Hawaii",
-                    name="Enjoy the beautiful beaches",
+        item = Item(name="Enjoy the beautiful beaches of Hawaii",
                     created_by=1,
                     bucketlist_id=1)
 
