@@ -1,6 +1,6 @@
 """Module to run the API."""
 
-from bucketlist.routes import Home
+from bucketlist.user_routes import Home
 from bucketlist.app import api, app
 
 # Create api endpoints
