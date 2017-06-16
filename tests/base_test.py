@@ -10,7 +10,7 @@ from configuration.config import app_config
 app.config.from_object(app_config["testing"])
 
 
-class TestBase(TestCase):
+class BaseTest(TestCase):
     """Base configurations for the testcases."""
 
     def create_app(self):
