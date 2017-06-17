@@ -15,7 +15,7 @@ class User(db.Model):
     @property
     def password(self):
         """Show error message when a user tries to edit the password field."""
-        raise AttributeError('password is a write-only field')
+        raise AttributeError('Password is a write-only field')
 
     @password.setter
     def password(self, password):

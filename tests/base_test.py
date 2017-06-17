@@ -1,5 +1,5 @@
 """Contain the setup for other test cases."""
-# import nose
+import nose
 from flask_testing import TestCase
 from bucketlist.app import db
 from start import app
@@ -41,5 +41,6 @@ class BaseTest(TestCase):
         db.session.remove()
         db.drop_all()
 
-# if __name__ == "__main__":
-#    nose.run()
+
+if __name__ == "__main__":
+    nose.run()
