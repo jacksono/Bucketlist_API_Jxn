@@ -1,6 +1,5 @@
 """Test user access to the app."""
 
-
 from tests.base_test import BaseTest
 import json
 from bucketlist.models import User

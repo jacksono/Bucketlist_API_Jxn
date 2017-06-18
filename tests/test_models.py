@@ -2,7 +2,6 @@
 
 from tests.base_test import BaseTest
 from bucketlist.models import User, Bucketlist, Item
-from bucketlist.app import db
 
 
 class TestModels(BaseTest):
