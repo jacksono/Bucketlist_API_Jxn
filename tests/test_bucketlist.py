@@ -56,3 +56,14 @@ class TestBucketlist(BaseTest):
         message = json.loads(r.data.decode())
         self.assertIn("Travel", message["name"])
         self.assertEqual(1, len(Bucketlist.query.all()))
+
+    def test_user_can_update_a_bucketlist(self):
+        """Tests if a user can update a bucketlist."""
+        self.bucketlist = {"title": "Move",
+                           "description": "Move around the world",
+                           "created_by": 1}
+        r = self.app.put("/api/v1/bucketlists/1", data=self.bucketlist,
+                         headers={"username": "user"})
+        self.assertEqual(r.status_code, 200)
+        self.aseertTrue(Bucketlist.query.filter_by(title="Move").first())
+        self.aseertFalse(Bucketlist.query.filter_by(title="Travel").first())
