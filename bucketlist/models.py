@@ -35,7 +35,7 @@ class Bucketlist(db.Model):
     """Maps bucketlists table which contains bucketlist inforamtion."""
 
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(50))
+    title = db.Column(db.String(50), unique=True)
     description = db.Column(db.Text)
     date_created = db.Column(db.DateTime, default=datetime.now)
     date_modified = db.Column(db.DateTime,
@@ -57,7 +57,7 @@ class Item(db.Model):
     """Maps to the items table which contains bucketlist item information."""
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100))
+    name = db.Column(db.String(100), unique=True)
     date_created = db.Column(db.DateTime, default=datetime.now)
     date_modified = db.Column(db.DateTime,
                               onupdate=datetime.now)

@@ -25,3 +25,28 @@ def add_user(user_object):
         db.session.rollback()
         return {"message": "Error: " + user_object.username +
                 " already exists."}
+
+
+def add_bucketlist(bucketlist_object):
+    """Add a bucketlist item to the database."""
+    try:
+        db.session.add(bucketlist_object)
+        db.session.commit()
+        message = {"message": "You have successfully added a new bucketlist."}
+        bucketlist_serializer = {
+                                "id": fields.Integer,
+                                "title": fields.String,
+                                "description": fields.String,
+                                "created_by": fields.Integer,
+                                "date_created": fields.DateTime,
+                                "date_modified": fields.DateTime
+                                }
+        response = marshal(bucketlist_object, bucketlist_serializer)
+        response.update(message)
+        return response, 201
+
+    except IntegrityError:
+        """Show when the bucketlist already exists"""
+        db.session.rollback()
+        return {"message": "Error: " + bucketlist_object.title +
+                " already exists."}
