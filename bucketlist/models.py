@@ -45,9 +45,6 @@ class Bucketlist(db.Model):
     user = db.relationship("User",
                            backref=db.backref("user", lazy="dynamic"))
 
-    items = db.relationship("Item",
-                            backref=db.backref("bucketlist"))
-
     def __repr__(self):
         """Enable printing of the Bucketlist title ."""
         return "<Bucketlist: %r>" % self.title
@@ -62,12 +59,10 @@ class Item(db.Model):
     date_modified = db.Column(db.DateTime,
                               onupdate=datetime.now)
     done = db.Column(db.Boolean, default=False)
-
-    created_by = db.Column(db.Integer, db.ForeignKey("user.id"))
-    user = db.relationship("User",
-                           backref=db.backref("item", lazy="dynamic"))
-
     bucketlist_id = db.Column(db.Integer, db.ForeignKey("bucketlist.id"))
+    bucketlist = db.relationship("Bucketlist",
+                                 backref=db.backref(
+                                     "bucketlist", lazy="dynamic"))
 
     def __repr__(self):
         """Enable printing of the Bucketlist Item name ."""

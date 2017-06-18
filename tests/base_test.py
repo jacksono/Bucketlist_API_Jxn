@@ -28,7 +28,6 @@ class BaseTest(TestCase):
                                 created_by=1)
 
         item = Item(name="Enjoy the beautiful beaches of Hawaii",
-                    created_by=1,
                     bucketlist_id=1)
 
         db.session.add(user)

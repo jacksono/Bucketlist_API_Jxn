@@ -13,7 +13,7 @@ class TestBucketlist(BaseTest):
         self.bucketlist = {"title": "Love",
                            "description": "I want to marry a princess",
                            "created_by": 1}
-        r = self.app.post("/api/v1/auth/bucketlists/", data=self.bucketlist,
+        r = self.app.post("/api/v1/bucketlists/", data=self.bucketlist,
                           headers={"username": "user"})
         self.assertEqual(r.status_code, 201)
         self.assertEqual(self.bucketlist["title"],
@@ -25,14 +25,14 @@ class TestBucketlist(BaseTest):
         self.bucketlist = {"title": "Travel",
                            "description": "travel",
                            "created_by": 1}
-        r = self.app.post("/api/v1/auth/bucketlists/", data=self.bucketlist,
+        r = self.app.post("/api/v1/bucketlists/", data=self.bucketlist,
                           headers={"username": "user"})
         message = json.loads(r.data.decode())
         self.assertIn("already exists", message["message"])
 
     def test_user_can_see_all_bucket_lists(self):
         """Test that a user can see all bucketlists."""
-        r = self.app.get("/api/v1/auth/bucketlists/",
+        r = self.app.get("/api/v1/bucketlists/",
                          headers={"username": "user"})
         self.assertEqual(r.status_code, 200)
         message = json.loads(r.data.decode())

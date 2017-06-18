@@ -8,8 +8,8 @@ from bucketlist.app import api, app
 api.add_resource(Home, "/")
 api.add_resource(UserLogin, "/auth/login/")
 api.add_resource(UserRegister, "/auth/register/")
-api.add_resource(CreateBucketList, "/auth/bucketlists/")
-api.add_resource(GetAllBucketLists, "/auth/bucketlists/")
+api.add_resource(CreateBucketList, "/bucketlists/")
+api.add_resource(GetAllBucketLists, "/bucketlists/")
 
 
 if __name__ == "__main__":
