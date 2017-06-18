@@ -69,3 +69,28 @@ def add_bucketlist(bucketlist_object):
         db.session.rollback()
         return {"message": "Error: " + bucketlist_object.title +
                 " already exists."}
+
+
+def add_item(item_object):
+    """Add an item to the bucketlist in the database."""
+    try:
+        db.session.add(item_object)
+        db.session.commit()
+        message = {"message": "Item created successfully."}
+        item_serializer = {
+                                "id": fields.Integer,
+                                "name": fields.String,
+                                "bucketlist_id": fields.Integer,
+                                "date_created": fields.DateTime,
+                                "date_modified": fields.DateTime,
+                                "done": fields.String
+                                }
+        response = marshal(item_object, item_serializer)
+        response.update(message)
+        return response, 201
+
+    except IntegrityError:
+        """Show when the item already exists"""
+        db.session.rollback()
+        return {"message": "Error: " + item_object.title +
+                " already exists."}
