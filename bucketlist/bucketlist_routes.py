@@ -1,7 +1,7 @@
 """Module to define buckeltist endpoints."""
 
 from flask_restful import Resource, reqparse
-from bucketlist.models import Bucketlist
+from bucketlist.models import Bucketlist, Item
 from bucketlist.helper_functions import add_bucketlist
 from flask import g
 
@@ -35,13 +35,31 @@ class GetAllBucketLists(Resource):
         """Show all bucketlists.Route: /api/v1/auth/bucketlists/ using GET."""
         message = {}
         data = []
+        items_dict = {}
+        items_list = []
+        items = Item.query.filter_by(bucketlist_id=g.bucketlist.id).all()
+        if items:
+            for item in items:
+                items_dict["id"] = item.id
+                items_dict["name"] = item.name
+                items_dict["date_modified"] = str(item.date_modified)
+                items_dict["date_created"] = str(item.date_created)
+                items_dict["done"] = str(item.done)
+                items_list.append(items_dict)
+                items_list = []
+        else:
+            items_list.append({"message": "No items yet"})
         bucketlists = Bucketlist.query.filter_by(created_by=g.user.id).all()
-        for bucketlist in bucketlists:
-            message["id"] = bucketlist.id
-            message["name"] = bucketlist.title
-            message["date_created"] = str(bucketlist.date_created)
-            message["date_modified"] = str(bucketlist.date_modified)
-            message["created_by"] = bucketlist.created_by
-            data.append(message)
-
-        return data
+        if bucketlists:
+            for bucketlist in bucketlists:
+                message["id"] = bucketlist.id
+                message["name"] = bucketlist.title
+                message["items"] = items_list
+                message["date_created"] = str(bucketlist.date_created)
+                message["date_modified"] = str(bucketlist.date_modified)
+                message["created_by"] = bucketlist.created_by
+                data.append(message)
+                message = {}
+            return data
+        else:
+            return {"message": "No bookmarks yet"}

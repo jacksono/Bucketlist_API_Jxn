@@ -33,8 +33,17 @@ class TestBucketlist(BaseTest):
     def test_user_can_see_all_bucket_lists(self):
         """Test that a user can see all bucketlists."""
         r = self.app.get("/api/v1/bucketlists/",
-                         headers={"username": "user"})
+                         headers={"username": "user", "bucketlist": "Travel"})
         self.assertEqual(r.status_code, 200)
         message = json.loads(r.data.decode())
         self.assertIn("Travel", message[0]["name"])
         self.assertEqual(1, len(Bucketlist.query.all()))
+
+    def test_message_shown_for_no_bookmarks_(self):
+        """Test that a message is shown for no bookmarks."""
+        self.user = {"username": "user2", "password": "password2"}
+        r = self.app.post("/api/v1/auth/register/", data=self.user)
+        r = self.app.get("/api/v1/bucketlists/",
+                         headers={"username": "user2", "bucketlist": "Travel"})
+        message = json.loads(r.data.decode())
+        self.assertIn("No bookmarks yet", message["message"])

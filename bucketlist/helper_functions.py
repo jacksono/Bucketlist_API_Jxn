@@ -6,7 +6,7 @@ from flask_restful import marshal
 from flask_restful import fields
 from bucketlist.app import app
 from flask import g, request
-from bucketlist.models import User
+from bucketlist.models import User, Bucketlist
 
 
 @app.before_request
@@ -18,6 +18,11 @@ def before_request():
             user = User.query.filter_by(username=username).first()
             if user:
                 g.user = user
+    if request.headers.get("bucketlist"):
+        bucketlist_name = request.headers.get("bucketlist")
+        bucketlist = Bucketlist.query.filter_by(title=bucketlist_name).first()
+        if bucketlist:
+            g.bucketlist = bucketlist
 
 
 def add_user(user_object):
