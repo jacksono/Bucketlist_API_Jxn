@@ -18,7 +18,7 @@ class TestModels(BaseTest):
         with self.assertRaises(AttributeError):
             user.password()
 
-    def test_user_model_verifies_password_corretly(self):
+    def test_user_model_verifies_password_correctly(self):
         """Test."""
         user = User.query.filter_by(username="user").first()
         self.assertTrue(user.verify_password("password"))

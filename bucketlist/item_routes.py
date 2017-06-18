@@ -10,7 +10,7 @@ class CreateItem(Resource):
     """Create a new bucketlist item. Route: /bucketlists/<id>/items/."""
 
     def post(self, id):
-        """"Create a new bucketlist item."""
+        """Create a new bucketlist item."""
         parser = reqparse.RequestParser()
         parser.add_argument(
             "name",
@@ -22,5 +22,5 @@ class CreateItem(Resource):
                             help="Please enter the status")
         args = parser.parse_args()
         name, done = args["name"], args["done"]
-        item = Item(name=name, done=done, bucketlist_id=g.bucketlist.id)
+        item = Item(name=name, done=done, bucketlist_id=id)
         return add_item(item)

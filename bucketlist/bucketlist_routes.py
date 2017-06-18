@@ -46,7 +46,7 @@ class GetAllBucketLists(Resource):
                 items_dict["date_created"] = str(item.date_created)
                 items_dict["done"] = str(item.done)
                 items_list.append(items_dict)
-                items_list = []
+                items_dict = {}
         else:
             items_list.append({"message": "No items yet"})
         bucketlists = Bucketlist.query.filter_by(created_by=g.user.id).all()
@@ -82,7 +82,7 @@ class GetSingleBucketList(Resource):
                 items_dict["date_created"] = str(item.date_created)
                 items_dict["done"] = str(item.done)
                 items_list.append(items_dict)
-                items_list = []
+                items_dict = {}
         else:
             items_list.append({"message": "No items yet"})
         bucketlist = Bucketlist.query.get(id)
