@@ -92,5 +92,5 @@ def add_item(item_object):
     except IntegrityError:
         """Show when the item already exists"""
         db.session.rollback()
-        return {"message": "Error: " + item_object.title +
+        return {"message": "Error: " + item_object.name +
                 " already exists."}

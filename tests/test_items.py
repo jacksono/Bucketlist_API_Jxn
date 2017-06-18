@@ -16,3 +16,12 @@ class TestItem(BaseTest):
         self.assertEqual(r.status_code, 201)
         message = json.loads(r.data.decode())
         self.assertIn("created successfully", message["message"])
+
+    def test_shows_message_when_item_already_exists(self):
+        """Tests that a message is shown when an item already exists."""
+        self.item = {"name": "Enjoy the beautiful beaches of Hawaii",
+                     "done": "True", "buckeltist_id": 1}
+        r = self.app.post("/api/v1/bucketlists/1/items/", data=self.item,
+                          headers={"username": "user"})
+        message = json.loads(r.data.decode())
+        self.assertIn("already exists", message["message"])

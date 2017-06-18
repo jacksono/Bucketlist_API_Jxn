@@ -3,7 +3,6 @@
 from flask_restful import Resource, reqparse
 from bucketlist.models import Item
 from bucketlist.helper_functions import add_item
-from flask import g
 
 
 class CreateItem(Resource):
