@@ -9,7 +9,7 @@ class TestBucketlist(BaseTest):
     """Test cases for bucketlist routes."""
 
     def test_user_can_create_a_bucket_list(self):
-        """Test that a logged in iser can create a bucketlist."""
+        """Test that a user can create a bucketlist."""
         self.bucketlist = {"title": "Love",
                            "description": "I want to marry a princess",
                            "created_by": 1}
