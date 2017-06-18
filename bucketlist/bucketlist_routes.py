@@ -62,4 +62,37 @@ class GetAllBucketLists(Resource):
                 message = {}
             return data
         else:
-            return {"message": "No bookmarks yet"}
+            return {"message": "No bucketlist yet"}
+
+
+class GetSingleBucketList(Resource):
+    """Get a single bucketlist. Route /bucketlist/<id>/."""
+
+    def get(self, id):
+        """Get a single bucketlist. Route /bucketlist/<id>/."""
+        message = {}
+        items_dict = {}
+        items_list = []
+        items = Item.query.filter_by(bucketlist_id=id).all()
+        if items:
+            for item in items:
+                items_dict["id"] = item.id
+                items_dict["name"] = item.name
+                items_dict["date_modified"] = str(item.date_modified)
+                items_dict["date_created"] = str(item.date_created)
+                items_dict["done"] = str(item.done)
+                items_list.append(items_dict)
+                items_list = []
+        else:
+            items_list.append({"message": "No items yet"})
+        bucketlist = Bucketlist.query.get(id)
+        if bucketlist:
+            message["id"] = bucketlist.id
+            message["name"] = bucketlist.title
+            message["items"] = items_list
+            message["date_created"] = str(bucketlist.date_created)
+            message["date_modified"] = str(bucketlist.date_modified)
+            message["created_by"] = bucketlist.created_by
+            return message
+        else:
+            return {"message": "That bucketlist doesnot exist"}
