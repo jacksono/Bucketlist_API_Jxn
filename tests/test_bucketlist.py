@@ -40,7 +40,7 @@ class TestBucketlist(BaseTest):
         self.assertEqual(1, len(Bucketlist.query.all()))
 
     def test_message_shown_for_no_bucketlist_(self):
-        """Test that a message is shown for no bookmarks."""
+        """Test that a message is shown for no bucketlist."""
         self.user = {"username": "user2", "password": "password2"}
         r = self.app.post("/api/v1/auth/register/", data=self.user)
         r = self.app.get("/api/v1/bucketlists/",

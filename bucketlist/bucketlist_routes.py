@@ -65,9 +65,12 @@ class GetAllBucketLists(Resource):
         """Show all bucketlists.Route: /api/v1/auth/bucketlists/ using GET."""
         output = []
         bucketlists = Bucketlist.query.filter_by(created_by=g.user.id).all()
-        for bucketlist in bucketlists:
-            output.append(get_bucketlist(id=bucketlist.id))
-        return output
+        if bucketlists:
+            for bucketlist in bucketlists:
+                output.append(get_bucketlist(id=bucketlist.id))
+            return output
+        else:
+            return {"message": "No bucketlist yet"}
 
 
 class GetSingleBucketList(Resource):
