@@ -43,4 +43,4 @@ class BaseTest(TestCase):
 
 
 if __name__ == "__main__":
-    nose.run()
+    nose.start()

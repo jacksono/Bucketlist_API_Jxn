@@ -4,6 +4,20 @@ from sqlalchemy.exc import IntegrityError
 from bucketlist.app import db
 from flask_restful import marshal
 from flask_restful import fields
+from bucketlist.app import app
+from flask import g, request
+from bucketlist.models import User
+
+
+@app.before_request
+def before_request():
+    """Set global attributes."""
+    if request.endpoint not in ["userlogin", "userregister", "home"]:
+        if request.headers.get("username"):
+            username = request.headers.get("username")
+            user = User.query.filter_by(username=username).first()
+            if user:
+                g.user = user
 
 
 def add_user(user_object):
@@ -12,7 +26,7 @@ def add_user(user_object):
         db.session.add(user_object)
         db.session.commit()
 
-        message = {"message": "You have successfully added a new user."}
+        message = {"message": "You have successfully added a new user "}
         user_serializer = {
                         "id": fields.Integer,
                         "username": fields.String}
