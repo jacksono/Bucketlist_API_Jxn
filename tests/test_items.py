@@ -67,3 +67,10 @@ class TestItem(BaseTest):
         r = self.app.put("/api/v1/bucketlists/2/items/1", data=self.item)
         message = json.loads(r.data.decode())
         self.assertIn("has no items", message["message"])
+
+    def test_user_can_delete_a_bucketlist_item(self):
+        """Tests that a user can delete an existing bucketlist item."""
+        r = self.app.delete("/api/v1/bucketlists/1/items/1")
+        message = json.loads(r.data.decode())
+        self.assertIn("deleted succesfully", message["message"])
+        self.assertFalse(Item.query.all())
