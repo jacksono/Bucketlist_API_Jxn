@@ -84,7 +84,7 @@ class GetSingleBucketList(Resource):
         return get_bucketlist(id)
 
 
-class UpdateBucketlist(Resource):
+class UpdateBucketList(Resource):
     """Update a bucket list: Route: PUT /bucketlists/<id>."""
 
     def put(self, id):
@@ -107,3 +107,17 @@ class UpdateBucketlist(Resource):
         db.session.add(bucketlist)
         db.session.commit()
         return {"message": "Bucket list updated succesfully"}
+
+
+class DeleteBucketList(Resource):
+    """Delete a single bucketlist. Route: DELETE /bucketlists/<id>."""
+
+    def delete(self, id):
+        """Delete a bucketlist."""
+        bucketlist = Bucketlist.query.get(id)
+        if bucketlist:
+            db.session.delete(bucketlist)
+            db.session.commit()
+            return {"messgae": "Bucketlist deleted successfully"}
+        else:
+            return {"messgae": "That bucketlist doesnot exist"}
