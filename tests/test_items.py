@@ -25,3 +25,45 @@ class TestItem(BaseTest):
                           headers={"username": "user"})
         message = json.loads(r.data.decode())
         self.assertIn("already exists", message["message"])
+
+    def test_user_can_update_a_bucketlist_item(self):
+        """Tests that a user can update an existing bucketlist item."""
+        self.item = {"name": "New Item", "bucketlist_id": 1, "done": "True"}
+        r = self.app.put("/api/v1/bucketlists/1/items/1", data=self.item)
+        self.assertEqual(r.status_code, 200)
+        self.assertTrue(Item.query.filter_by(name="New Item").first())
+        self.assertFalse(Item.query.filter_by(
+            name="Enjoy the beautiful beaches of Hawaii").first())
+
+    def test_message_when_user_updates_to__name_that_already_exists(self):
+        """Tests for an error message shown when a user tries to update to a item name which already exists.""" # noqa
+        self.item = {"name": "Go to Hawaii", "done": "True",
+                     "buckeltist_id": 1}
+        self.app.post("/api/v1/bucketlists/1/items/", data=self.item,
+                      headers={"username": "user", "bucketlist": "Travel"})
+        self.item2 = {"name": "Enjoy the beautiful beaches of Hawaii",
+                      "bucketlist_id": 1, "done": "True"}
+        r = self.app.put("/api/v1/bucketlists/1/items/2", data=self.item2)
+        message = json.loads(r.data.decode())
+        self.assertIn("already exists", message["message"])
+
+    def test_message_when_user_updates_an_item_that_doesnot_exists(self):
+        """Tests for an error message shown when a user tries to update an item which doesnot exist.""" # noqa
+        self.item = {"name": "Enjoy the beautiful beaches of Hawaii",
+                     "bucketlist_id": 1, "done": "True"}
+        r = self.app.put("/api/v1/bucketlists/1/items/2", data=self.item)
+        message = json.loads(r.data.decode())
+        self.assertIn("doesnot exist", message["message"])
+
+    def test_message_when_user_updates_a_bucketlist_that_has_no_items(self):
+        """Tests for an error message when a user tries to update a bucketlist which has no items.""" # noqa
+        self.bucketlist = {"title": "Love",
+                           "description": "I want to marry a princcess",
+                           "created_by": 1}
+        self.app.post("/api/v1/bucketlists/", data=self.bucketlist,
+                      headers={"username": "user"})
+        self.item = {"name": "Enjoy the beautiful beaches of Hawaii",
+                     "bucketlist_id": 1, "done": "True"}
+        r = self.app.put("/api/v1/bucketlists/2/items/1", data=self.item)
+        message = json.loads(r.data.decode())
+        self.assertIn("has no items", message["message"])

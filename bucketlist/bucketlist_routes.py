@@ -122,6 +122,6 @@ class DeleteBucketList(Resource):
                     db.session.delete(item)
             db.session.delete(bucketlist)
             db.session.commit()
-            return {"messgae": "Bucketlist deleted successfully"}
+            return {"message": "Bucketlist deleted successfully"}
         else:
             return {"message": "That bucketlist doesnot exist"}
