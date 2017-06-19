@@ -4,6 +4,8 @@ from flask_restful import Resource, reqparse
 from bucketlist.models import Bucketlist, Item
 from bucketlist.helper_functions import add_bucketlist
 from flask import g
+from bucketlist.app import db
+from datetime import datetime
 
 
 def get_bucketlist(id):
@@ -79,3 +81,28 @@ class GetSingleBucketList(Resource):
     def get(self, id):
         """Get a single bucketlist. Route /bucketlist/<id>/."""
         return get_bucketlist(id)
+
+
+class UpdateBucketlist(Resource):
+    """Update a bucket list: Route: PUT /bucketlists/<id>."""
+
+    def put(self, id):
+        """Update bucketlist."""
+        parser = reqparse.RequestParser()
+        parser.add_argument(
+            "title",
+            required=True,
+            help="Please enter a bucketlist title.")
+        parser.add_argument(
+                            "description",
+                            required=True,
+                            help="Please enter a description")
+        args = parser.parse_args()
+        title, description = args["title"], args["description"]
+        bucketlist = Bucketlist.query.filter_by(id=id).first()
+        bucketlist.title = title
+        bucketlist.description = description
+        bucketlist.date_modified = datetime.now()
+        db.session.add(bucketlist)
+        db.session.commit()
+        return {"message": "Bucket list updated succesfully"}

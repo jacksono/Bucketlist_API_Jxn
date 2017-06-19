@@ -65,5 +65,5 @@ class TestBucketlist(BaseTest):
         r = self.app.put("/api/v1/bucketlists/1", data=self.bucketlist,
                          headers={"username": "user"})
         self.assertEqual(r.status_code, 200)
-        self.aseertTrue(Bucketlist.query.filter_by(title="Move").first())
-        self.aseertFalse(Bucketlist.query.filter_by(title="Travel").first())
+        self.assertTrue(Bucketlist.query.filter_by(title="Move").first())
+        self.assertFalse(Bucketlist.query.filter_by(title="Travel").first())
