@@ -74,3 +74,10 @@ class TestBucketlist(BaseTest):
                             headers={"username": "user"})
         self.assertEqual(r.status_code, 200)
         self.assertEqual(0, len(Bucketlist.query.all()))
+
+    def test_user_cannot_delete_a_non_existant_bucketlist(self):
+        """Tests that a user cannot delete a bucket list that doesnot exist."""
+        r = self.app.delete("/api/v1/bucketlists/2",
+                            headers={"username": "user"})
+        message = json.loads(r.data.decode())
+        self.assertIn("doesnot exist", message["message"])
