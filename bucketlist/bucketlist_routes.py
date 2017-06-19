@@ -29,6 +29,7 @@ def get_bucketlist(id):
     if bucketlist:
         message["id"] = bucketlist.id
         message["name"] = bucketlist.title
+        message["description"] = bucketlist.description
         message["items"] = items_list
         message["date_created"] = str(bucketlist.date_created)
         message["date_modified"] = str(bucketlist.date_modified)
