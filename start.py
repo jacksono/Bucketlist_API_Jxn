@@ -6,7 +6,8 @@ from bucketlist.bucketlist_routes import (CreateBucketList,
                                           GetSingleBucketList,
                                           UpdateBucketList,
                                           DeleteBucketList)
-from bucketlist.item_routes import CreateItem, UpdateItem
+from bucketlist.item_routes import CreateItem, DeleteItem
+from bucketlist.item_routes import CreateItem, UpdateItem, DeleteItem
 from bucketlist.app import api, app
 
 # Create api endpoints
@@ -19,6 +20,7 @@ api.add_resource(GetSingleBucketList, "/bucketlists/<id>")
 api.add_resource(CreateItem, "/bucketlists/<id>/items/")
 api.add_resource(UpdateBucketList, "/bucketlists/<id>")
 api.add_resource(DeleteBucketList, "/bucketlists/<id>")
+api.add_resource(DeleteItem, "/bucketlists/<id>/items/<item_id>")
 api.add_resource(UpdateItem, "/bucketlists/<id>/items/<item_id>")
 
 

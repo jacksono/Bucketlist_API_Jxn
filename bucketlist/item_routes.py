@@ -3,9 +3,11 @@
 from flask_restful import Resource, reqparse
 from bucketlist.models import Item
 from bucketlist.helper_functions import add_item
+from bucketlist.app import db
 from datetime import datetime
 from bucketlist.app import db
 from sqlalchemy.exc import IntegrityError
+
 
 
 class CreateItem(Resource):
@@ -27,6 +29,24 @@ class CreateItem(Resource):
         item = Item(name=name, done=done, bucketlist_id=id)
         return add_item(item)
 
+
+class DeleteItem(Resource):
+    """Delete bucketlist item. Route: /bucketlists/<id>/items/<item_id>."""
+
+    def delete(self, id, item_id):
+        """Delete bucketlist item."""
+        items = Item.query.filter_by(bucketlist_id=id).all()
+        if items:
+            if int(item_id) <= len(items):
+                item = items[int(item_id) - 1]
+                db.session.delete(item)
+                db.session.commit()
+                return {"message": "Item deleted succesfully"}
+            else:
+                return {"message": "That item doesnot exist"}
+        else:
+            return {"message": "ERROR!: That Bucketlist does not exists"
+                    " or does not have any items"}
 
 class UpdateItem(Resource):
     """Update a bucketlist item.Route: /bucketlists/<id>/items/<item_id>."""
@@ -64,3 +84,4 @@ class UpdateItem(Resource):
                 return {"message": "Item doesnot exist in the bucketlist"}
         else:
             return {"message": "That bucketlist has no items"}
+
