@@ -67,3 +67,10 @@ class TestBucketlist(BaseTest):
         self.assertEqual(r.status_code, 200)
         self.assertTrue(Bucketlist.query.filter_by(title="Move").first())
         self.assertFalse(Bucketlist.query.filter_by(title="Travel").first())
+
+    def test_user_can_delete_a_bucketlist(self):
+        """Tests that a user can delete a bucketlist."""
+        r = self.app.delete("/api/v1/bucketlists/1",
+                            headers={"username": "user"})
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(0, len(Bucketlist.query.all()))
