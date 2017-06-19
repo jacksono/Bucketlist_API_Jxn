@@ -116,6 +116,10 @@ class DeleteBucketList(Resource):
         """Delete a bucketlist."""
         bucketlist = Bucketlist.query.get(id)
         if bucketlist:
+            items = Item.query.filter_by(bucketlist_id=id).all()
+            if items:
+                for item in items:
+                    db.session.delete(item)
             db.session.delete(bucketlist)
             db.session.commit()
             return {"messgae": "Bucketlist deleted successfully"}
