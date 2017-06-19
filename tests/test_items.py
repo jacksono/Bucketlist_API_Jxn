@@ -25,3 +25,13 @@ class TestItem(BaseTest):
                           headers={"username": "user"})
         message = json.loads(r.data.decode())
         self.assertIn("already exists", message["message"])
+
+    def test_user_can_update_a_bucketlist_item(self):
+        """Tests that a user can update an existing bucketlist item."""
+        self.item = {"name": "New Item", "bucketlist_id": 1}
+        r = self.app.put("/api/v1/bucketlists/1/items/1", data=self.item,
+                         headers={"username": "user"})
+        self.assertEqual(r.status_code, 200)
+        self.assertTrue(Item.query.filter_by(name="New Item").first())
+        self.assertFalse(Item.query.filter_by(
+            name="Enjoy the beautiful beaches of Hawaii").first())
