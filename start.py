@@ -6,7 +6,6 @@ from bucketlist.bucketlist_routes import (CreateBucketList,
                                           GetSingleBucketList,
                                           UpdateBucketList,
                                           DeleteBucketList)
-from bucketlist.item_routes import CreateItem, DeleteItem
 from bucketlist.item_routes import CreateItem, UpdateItem, DeleteItem
 from bucketlist.app import api, app
 

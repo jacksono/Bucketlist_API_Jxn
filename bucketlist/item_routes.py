@@ -5,9 +5,7 @@ from bucketlist.models import Item
 from bucketlist.helper_functions import add_item
 from bucketlist.app import db
 from datetime import datetime
-from bucketlist.app import db
 from sqlalchemy.exc import IntegrityError
-
 
 
 class CreateItem(Resource):
@@ -48,6 +46,7 @@ class DeleteItem(Resource):
             return {"message": "ERROR!: That Bucketlist does not exists"
                     " or does not have any items"}
 
+
 class UpdateItem(Resource):
     """Update a bucketlist item.Route: /bucketlists/<id>/items/<item_id>."""
 
@@ -84,4 +83,3 @@ class UpdateItem(Resource):
                 return {"message": "Item doesnot exist in the bucketlist"}
         else:
             return {"message": "That bucketlist has no items"}
-
