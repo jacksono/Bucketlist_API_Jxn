@@ -4,7 +4,8 @@ from bucketlist.user_routes import Home, UserLogin, UserRegister
 from bucketlist.bucketlist_routes import (CreateBucketList,
                                           GetAllBucketLists,
                                           GetSingleBucketList,
-                                          UpdateBucketlist)
+                                          UpdateBucketList,
+                                          DeleteBucketList)
 from bucketlist.item_routes import CreateItem
 from bucketlist.app import api, app
 
@@ -16,7 +17,8 @@ api.add_resource(CreateBucketList, "/bucketlists/")
 api.add_resource(GetAllBucketLists, "/bucketlists/")
 api.add_resource(GetSingleBucketList, "/bucketlists/<id>")
 api.add_resource(CreateItem, "/bucketlists/<id>/items/")
-api.add_resource(UpdateBucketlist, "/bucketlists/<id>")
+api.add_resource(UpdateBucketList, "/bucketlists/<id>")
+api.add_resource(DeleteBucketList, "/bucketlists/<id>")
 
 
 if __name__ == "__main__":
