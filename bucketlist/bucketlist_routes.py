@@ -6,6 +6,7 @@ from bucketlist.helper_functions import add_bucketlist
 from flask import g
 from bucketlist.app import db
 from datetime import datetime
+from sqlalchemy.exc import IntegrityError
 
 
 def get_bucketlist(id):
@@ -104,8 +105,14 @@ class UpdateBucketList(Resource):
         bucketlist.title = title
         bucketlist.description = description
         bucketlist.date_modified = datetime.now()
-        db.session.add(bucketlist)
-        db.session.commit()
+        try:
+            db.session.add(bucketlist)
+            db.session.commit()
+        except IntegrityError:
+            """Show when the username already exists"""
+            db.session.rollback()
+            return {"message": "Error: " + title +
+                    " already exists."}
         return {"message": "Bucket list updated succesfully"}
 
 
