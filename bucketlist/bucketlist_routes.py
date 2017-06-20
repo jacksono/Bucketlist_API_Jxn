@@ -1,6 +1,6 @@
 """Module to define buckeltist endpoints."""
 
-from flask_restful import Resource, reqparse, marshal, fields
+from flask_restful import Resource, reqparse
 from bucketlist.models import Bucketlist, Item
 from bucketlist.helper_functions import (add_bucketlist,
                                          authorized_for_bucketlist)
