@@ -1,10 +1,10 @@
 """Module to define buckeltist endpoints."""
 
-from flask_restful import Resource, reqparse
+from flask_restful import Resource, reqparse, marshal, fields
 from bucketlist.models import Bucketlist, Item
 from bucketlist.helper_functions import (add_bucketlist,
                                          authorized_for_bucketlist)
-from flask import g
+from flask import g, request
 from bucketlist.app import db
 from datetime import datetime
 from sqlalchemy.exc import IntegrityError
@@ -67,16 +67,46 @@ class GetAllBucketLists(Resource):
     """Shows all bucketlists. Route: /api/v1/auth/bucketlists/ using GET."""
 
     def get(self):
-        """Show all bucketlists.Route: /api/v1/auth/bucketlists/ using GET."""
-        output = []
-        bucketlists = Bucketlist.query.filter_by(created_by=g.user.id).all()
+        """Show all bucketlists and implements pagination.
+
+        Route: /api/v1/auth/bucketlists/ using GET.
+        """
+        args = request.args.to_dict()
+        page = int(args.get("page", 1))
+        limit = int(args.get("limit", 20))
+        bucketlists = Bucketlist.query.filter_by(
+            created_by=g.user.id).paginate(
+                page=page, per_page=limit, error_out=False)
+        no_of_pages = bucketlists.pages
+        has_next = bucketlists.has_next
+        has_previous = bucketlists.has_prev
+        if has_next:
+            next_page = (str(request.url_root) + "api/v1/bucketlists?" +
+                         "limit=" + str(limit) + "&page=" + str(page + 1))
+        else:
+            next_page = "None"
+        if has_previous:
+            previous_page = (request.url_root + "api/v1/bucketlists?" +
+                             "limit=" + str(limit) + "&page=" + str(page - 1))
+        else:
+            previous_page = "None"
+        list_of_bucketlists = []
+        bucketlists = bucketlists.items
+
+        for bucketlist in bucketlists:
+            list_of_bucketlists.append(get_bucketlist(bucketlist.id))
+
+        output = {"Bucketlists": list_of_bucketlists,
+                  "Current Page": page,
+                  "No of pages": no_of_pages,
+                  "Previous page": previous_page,
+                  "Next page": next_page
+                  }
+
         if bucketlists:
-            for bucketlist in bucketlists:
-                output.append(get_bucketlist(id=bucketlist.id))
             return output
         else:
-            return {"message": "No bucketlist yet by {}".format(
-                                                         g.user.username)}
+            return {"message": "Error"}
 
 
 class GetSingleBucketList(Resource):
