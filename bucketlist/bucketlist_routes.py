@@ -3,7 +3,7 @@
 from flask_restful import Resource, reqparse
 from bucketlist.models import Bucketlist, Item
 from bucketlist.helper_functions import (add_bucketlist,
-                                        authorized_for_bucketlist)
+                                         authorized_for_bucketlist)
 from flask import g
 from bucketlist.app import db
 from datetime import datetime

@@ -9,7 +9,6 @@ from flask import g, request, jsonify
 from bucketlist.models import User, Bucketlist
 
 
-
 @app.before_request
 def before_request():
     """Set global attributes."""
