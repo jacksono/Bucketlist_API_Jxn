@@ -5,7 +5,7 @@ from bucketlist.app import db
 from flask_restful import marshal
 from flask_restful import fields
 from bucketlist.app import app
-from flask import g, request
+from flask import g, request, jsonify
 from bucketlist.models import User, Bucketlist
 
 
@@ -13,16 +13,15 @@ from bucketlist.models import User, Bucketlist
 def before_request():
     """Set global attributes."""
     if request.endpoint not in ["userlogin", "userregister", "home"]:
-        if request.headers.get("username"):
-            username = request.headers.get("username")
-            user = User.query.filter_by(username=username).first()
+        token = request.headers.get("token")
+        if token is not None:
+            user = User.verify_auth_token(token)
             if user:
                 g.user = user
-    if request.headers.get("bucketlist"):
-        bucketlist_name = request.headers.get("bucketlist")
-        bucketlist = Bucketlist.query.filter_by(title=bucketlist_name).first()
-        if bucketlist:
-            g.bucketlist = bucketlist
+            else:
+                return jsonify({"message": "Error: Invalid Token"})
+        else:
+            return jsonify({"message": "Error: Please enter a token"})
 
 
 def add_user(user_object):
@@ -94,3 +93,18 @@ def add_item(item_object):
         db.session.rollback()
         return {"message": "Error: " + item_object.name +
                 " already exists."}
+
+
+def authorized_for_bucketlist(function):
+    """Verify if the bucketlist belongs to the current user."""
+    def auth_wrapper(*args, **kwargs):
+        """Set decorator."""
+        g.bucketlist = Bucketlist.query.filter_by(id=kwargs["id"]).first()
+        if g.bucketlist:
+            if g.bucketlist.created_by == g.user.id:
+                return function(*args, **kwargs)
+            return jsonify({"message": "Error: Cannot see / modify bucketlist"
+                            " created by someonelse"})
+        else:
+            return jsonify({"message": "That Bucketlist doesnot exist"})
+    return auth_wrapper

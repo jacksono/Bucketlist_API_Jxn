@@ -2,7 +2,7 @@
 
 from flask_restful import Resource, reqparse
 from bucketlist.models import Item
-from bucketlist.helper_functions import add_item
+from bucketlist.helper_functions import add_item, authorized_for_bucketlist
 from bucketlist.app import db
 from datetime import datetime
 from sqlalchemy.exc import IntegrityError
@@ -11,6 +11,7 @@ from sqlalchemy.exc import IntegrityError
 class CreateItem(Resource):
     """Create a new bucketlist item. Route: /bucketlists/<id>/items/."""
 
+    @authorized_for_bucketlist
     def post(self, id):
         """Create a new bucketlist item."""
         parser = reqparse.RequestParser()
@@ -31,6 +32,7 @@ class CreateItem(Resource):
 class DeleteItem(Resource):
     """Delete bucketlist item. Route: /bucketlists/<id>/items/<item_id>."""
 
+    @authorized_for_bucketlist
     def delete(self, id, item_id):
         """Delete bucketlist item."""
         items = Item.query.filter_by(bucketlist_id=id).all()
@@ -50,6 +52,7 @@ class DeleteItem(Resource):
 class UpdateItem(Resource):
     """Update a bucketlist item.Route: /bucketlists/<id>/items/<item_id>."""
 
+    @authorized_for_bucketlist
     def put(self, id, item_id):
         """Update a bucketlist item."""
         parser = reqparse.RequestParser()
