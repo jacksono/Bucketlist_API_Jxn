@@ -5,24 +5,23 @@ from bucketlist.app import db
 from flask_restful import marshal
 from flask_restful import fields
 from bucketlist.app import app
-from flask import g, request
-from bucketlist.models import User, Bucketlist
+from flask import g, request, jsonify
+from bucketlist.models import User
 
 
 @app.before_request
 def before_request():
     """Set global attributes."""
     if request.endpoint not in ["userlogin", "userregister", "home"]:
-        if request.headers.get("username"):
-            username = request.headers.get("username")
-            user = User.query.filter_by(username=username).first()
+        token = request.headers.get("token")
+        if token is not None:
+            user = User.verify_auth_token(token)
             if user:
                 g.user = user
-    if request.headers.get("bucketlist"):
-        bucketlist_name = request.headers.get("bucketlist")
-        bucketlist = Bucketlist.query.filter_by(title=bucketlist_name).first()
-        if bucketlist:
-            g.bucketlist = bucketlist
+            else:
+                return jsonify({"message": "Error: Invalid Token"})
+        else:
+            return jsonify({"message": "Error: Please enter a token"})
 
 
 def add_user(user_object):

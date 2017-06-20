@@ -53,7 +53,10 @@ class UserLogin(Resource):
         user = User.query.filter_by(username=username).first()
         if user:
             if user.verify_password(password):
-                return {"message": "Logged in successfully"}
+                token = user.generate_token()
+                return {"message": "Logged in successfully. Your token for"
+                        " making requests is below",
+                        "token": token.decode("ascii")}
             else:
                 return {"message": "Error: Incorrect password."
                         " Please check and try again! "}

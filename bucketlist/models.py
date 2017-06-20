@@ -2,7 +2,10 @@
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
-from bucketlist.app import db
+from bucketlist.app import db, app
+from itsdangerous import (TimedJSONWebSignatureSerializer
+                          as Serializer, BadSignature, SignatureExpired)
+from flask import jsonify
 
 
 class User(db.Model):
@@ -25,6 +28,27 @@ class User(db.Model):
     def verify_password(self, password):
         """Compare password_hashes with that saved in the table for user."""
         return check_password_hash(self.password_hash, password)
+
+    def generate_token(self, valid_for=30000):
+        """Generate a token expiring in 30 minutes."""
+        serializer = Serializer(
+            app.config["SECRET_KEY"],
+            expires_in=valid_for)
+        return serializer.dumps({"id": self.id})
+
+    @staticmethod
+    def verify_auth_token(token):
+        """Verify token."""
+        serializer = Serializer(app.config["SECRET_KEY"])
+        try:
+            data = serializer.loads(token)
+        except SignatureExpired:
+            return None
+        except BadSignature:
+            return None
+
+        user = User.query.get(data["id"])
+        return user
 
     def __repr__(self):
         """Enable printing of the user's username."""
