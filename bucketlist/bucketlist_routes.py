@@ -106,7 +106,7 @@ class GetAllBucketLists(Resource):
         if bucketlists:
             return output
         else:
-            return {"message": "Error"}
+            return {"message": "ERROR! No bucketlist yet"}
 
 
 class GetSingleBucketList(Resource):

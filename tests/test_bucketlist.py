@@ -45,7 +45,7 @@ class TestBucketlist(BaseTest):
         r = self.app.get("/api/v1/bucketlists/", headers=self.get_token())
         self.assertEqual(r.status_code, 200)
         message = json.loads(r.data.decode())
-        self.assertIn("Travel", message[0]["name"])
+        self.assertIn("Travel", message["Bucketlists"][0]["name"])
         self.assertEqual(1, len(Bucketlist.query.all()))
 
     def test_message_shown_for_no_bucketlist_(self):
