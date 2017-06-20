@@ -5,7 +5,6 @@ from datetime import datetime
 from bucketlist.app import db, app
 from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer, BadSignature, SignatureExpired)
-from flask import jsonify
 
 
 class User(db.Model):
