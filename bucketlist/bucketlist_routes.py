@@ -2,7 +2,8 @@
 
 from flask_restful import Resource, reqparse
 from bucketlist.models import Bucketlist, Item
-from bucketlist.helper_functions import add_bucketlist
+from bucketlist.helper_functions import (add_bucketlist,
+                                        authorized_for_bucketlist)
 from flask import g
 from bucketlist.app import db
 from datetime import datetime
@@ -74,31 +75,39 @@ class GetAllBucketLists(Resource):
                 output.append(get_bucketlist(id=bucketlist.id))
             return output
         else:
-            return {"message": "No bucketlist yet"}
+            return {"message": "No bucketlist yet by {}".format(
+                                                         g.user.username)}
 
 
 class GetSingleBucketList(Resource):
     """Get a single bucketlist. Route /bucketlist/<id>/."""
 
+    @authorized_for_bucketlist
     def get(self, id):
         """Get a single bucketlist. Route /bucketlist/<id>/."""
-        return get_bucketlist(id)
+        bucketlists = Bucketlist.query.filter_by(created_by=g.user.id).all()
+        if bucketlists:
+            return get_bucketlist(id)
+        else:
+            return {"message": "No bucketlist yet by {}".format(
+                                                         g.user.username)}
 
 
 class UpdateBucketList(Resource):
     """Update a bucket list: Route: PUT /bucketlists/<id>."""
 
+    @authorized_for_bucketlist
     def put(self, id):
         """Update bucketlist."""
         parser = reqparse.RequestParser()
         parser.add_argument(
             "title",
             required=True,
-            help="Please enter a bucketlist title.")
+            help="Please enter a new bucketlist title.")
         parser.add_argument(
                             "description",
                             required=True,
-                            help="Please enter a description")
+                            help="Please enter a new description")
         args = parser.parse_args()
         title, description = args["title"], args["description"]
         bucketlist = Bucketlist.query.filter_by(id=id).first()
@@ -119,6 +128,7 @@ class UpdateBucketList(Resource):
 class DeleteBucketList(Resource):
     """Delete a single bucketlist. Route: DELETE /bucketlists/<id>."""
 
+    @authorized_for_bucketlist
     def delete(self, id):
         """Delete a bucketlist."""
         bucketlist = Bucketlist.query.get(id)

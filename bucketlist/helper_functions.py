@@ -6,7 +6,8 @@ from flask_restful import marshal
 from flask_restful import fields
 from bucketlist.app import app
 from flask import g, request, jsonify
-from bucketlist.models import User
+from bucketlist.models import User, Bucketlist
+
 
 
 @app.before_request
@@ -93,3 +94,18 @@ def add_item(item_object):
         db.session.rollback()
         return {"message": "Error: " + item_object.name +
                 " already exists."}
+
+
+def authorized_for_bucketlist(function):
+    """Verify if the bucketlist belongs to the current user."""
+    def auth_wrapper(*args, **kwargs):
+        """Set decorator."""
+        g.bucketlist = Bucketlist.query.filter_by(id=kwargs["id"]).first()
+        if g.bucketlist:
+            if g.bucketlist.created_by == g.user.id:
+                return function(*args, **kwargs)
+            return jsonify({"message": "Error: Cannot see / modify bucketlist"
+                            " created by someonelse"})
+        else:
+            return jsonify({"message": "That Bucketlist doesnot exist"})
+    return auth_wrapper
