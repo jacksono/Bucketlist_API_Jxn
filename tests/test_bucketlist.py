@@ -54,7 +54,7 @@ class TestBucketlist(BaseTest):
                         headers=self.get_token())
         r = self.app.get("/api/v1/bucketlists/", headers=self.get_token())
         message = json.loads(r.data.decode())
-        self.assertIn("No bucketlist yet", message["message"])
+        self.assertIn("No bucketlist", message["message"])
 
     def test_can_get_single_bucket_list(self):
         """Tests that a single bucket list can be displayed."""
@@ -89,3 +89,11 @@ class TestBucketlist(BaseTest):
                             headers=self.get_token())
         message = json.loads(r.data.decode())
         self.assertIn("doesnot exist", message["message"])
+
+    def test_search_by_name_option_works(self):
+        """Tests that a user can search for a bucketlist by name."""
+        r = self.app.get("/api/v1/bucketlists/?q=Travel",
+                         headers=self.get_token())
+        self.assertEqual(r.status_code, 200)
+        message = json.loads(r.data.decode())
+        self.assertIn("Travel", message["Bucketlists"][0]["name"])
