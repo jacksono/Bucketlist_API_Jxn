@@ -67,15 +67,22 @@ class GetAllBucketLists(Resource):
     """Shows all bucketlists. Route: /api/v1/auth/bucketlists/ using GET."""
 
     def get(self):
-        """Show all bucketlists and implements pagination.
+        """Show all bucketlists and implements pagination and searching by name.
 
         Route: /api/v1/auth/bucketlists/ using GET.
         """
         args = request.args.to_dict()
         page = int(args.get("page", 1))
         limit = int(args.get("limit", 20))
-        bucketlists = Bucketlist.query.filter_by(
-            created_by=g.user.id).paginate(
+        search_by_name = args.get("q")
+        args = {"created_by": g.user.id}
+        if search_by_name:
+            bucketlists = Bucketlist.query.filter_by(
+                created_by=g.user.id, title=search_by_name).paginate(
+                page=page, per_page=limit, error_out=False)
+        else:
+            bucketlists = Bucketlist.query.filter_by(
+                created_by=g.user.id).paginate(
                 page=page, per_page=limit, error_out=False)
         no_of_pages = bucketlists.pages
         has_next = bucketlists.has_next
@@ -98,15 +105,17 @@ class GetAllBucketLists(Resource):
 
         output = {"Bucketlists": list_of_bucketlists,
                   "Current Page": page,
-                  "No of pages": no_of_pages,
+                  "No. of pages": no_of_pages,
                   "Previous page": previous_page,
-                  "Next page": next_page
+                  "Next page": next_page,
+                  "No. of bucketlists": len(list_of_bucketlists)
                   }
 
         if bucketlists:
             return output
         else:
-            return {"message": "ERROR! No bucketlist yet"}
+            return {"message": "ERROR! No bucketlist by {} matching that"
+                    " request".format(g.user.username)}
 
 
 class GetSingleBucketList(Resource):
