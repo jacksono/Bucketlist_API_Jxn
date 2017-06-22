@@ -11,7 +11,7 @@ class TestItem(BaseTest):
         """Return authentication token."""
         self.user = {"username": "user",
                      "password": "password"}
-        r = self.app.post("/api/v1/auth/login/",
+        r = self.app.post("/api/v1/auth/login",
                           data=self.user)
         output = json.loads(r.data.decode())
         token = output.get("token")

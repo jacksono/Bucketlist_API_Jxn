@@ -11,8 +11,8 @@ from bucketlist.app import api, app
 
 # Create api endpoints
 api.add_resource(Home, "/")
-api.add_resource(UserLogin, "/auth/login/")
-api.add_resource(UserRegister, "/auth/register/")
+api.add_resource(UserLogin, "/auth/login")
+api.add_resource(UserRegister, "/auth/register")
 api.add_resource(CreateBucketList, "/bucketlists/")
 api.add_resource(GetAllBucketLists, "/bucketlists/")
 api.add_resource(GetSingleBucketList, "/bucketlists/<id>")

@@ -14,7 +14,7 @@ class Home(Resource):
 
 
 class UserRegister(Resource):
-    """Register a new user to the route /api/v1/auth/register/ using POST."""
+    """Register a new user to the route /api/v1/auth/register using POST."""
 
     def post(self):
         """Register a user."""
@@ -35,7 +35,7 @@ class UserRegister(Resource):
 
 
 class UserLogin(Resource):
-    """Log in a user to the route /api/v1/auth/login/ using POST."""
+    """Log in a user to the route /api/v1/auth/login using POST."""
 
     def post(self):
         """Parse data through the header."""
