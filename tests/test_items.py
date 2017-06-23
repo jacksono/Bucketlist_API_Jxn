@@ -47,7 +47,10 @@ class TestItem(BaseTest):
             name="Enjoy the beautiful beaches of Hawaii").first())
 
     def test_message_when_user_updates_to__name_that_already_exists(self):
-        """Tests for an error message shown when a user tries to update to a item name which already exists.""" # noqa
+        """Tests for an error message.
+
+        shown when a user tries to update to a item name which already exists.
+        """
         self.item = {"name": "Go to Hawaii", "done": "True",
                      "buckeltist_id": 1}
         self.app.post("/api/v1/bucketlists/1/items/", data=self.item,
