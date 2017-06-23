@@ -3,8 +3,8 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from bucketlist.app import db, app
-from itsdangerous import (TimedJSONWebSignatureSerializer
-                          as Serializer, BadSignature, SignatureExpired)
+from itsdangerous import (TimedJSONWebSignatureSerializer  # noqa
+                          as Serializer, BadSignature,)  # SignatureExpired)
 
 
 class User(db.Model):
@@ -41,8 +41,8 @@ class User(db.Model):
         serializer = Serializer(app.config["SECRET_KEY"])
         try:
             data = serializer.loads(token)
-        except SignatureExpired:
-            return None
+        # except SignatureExpired:
+        #     return None
         except BadSignature:
             return None
 
