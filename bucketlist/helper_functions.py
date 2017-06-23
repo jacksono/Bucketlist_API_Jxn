@@ -13,15 +13,26 @@ from bucketlist.models import User, Bucketlist
 def before_request():
     """Set global attributes."""
     if request.endpoint not in ["userlogin", "userregister", "home"]:
-        token = request.headers.get("token")
-        if token is not None:
-            user = User.verify_auth_token(token)
-            if user:
-                g.user = user
+        if request.endpoint in ["createitem",
+                                "updateitem",
+                                "deleteitem",
+                                "createbucketlist",
+                                "getallbucketlists",
+                                "getsinglebucketlist",
+                                "updatebucketlist",
+                                "deletebucketlist"]:
+            token = request.headers.get("token")
+            if token is not None:
+                user = User.verify_auth_token(token)
+                if user:
+                    g.user = user
+                else:
+                    return jsonify({"message": "Error: Invalid Token"})
             else:
-                return jsonify({"message": "Error: Invalid Token"})
+                return jsonify({"message": "Error: Please enter a token"})
         else:
-            return jsonify({"message": "Error: Please enter a token"})
+            return jsonify({"message": "Error: Wrong URL or Incorrect request"
+                            " METHOD. Please check and try again"})
 
 
 def add_user(user_object):
