@@ -55,19 +55,20 @@ class UpdateItem(Resource):
     @authorized_for_bucketlist
     def put(self, id, item_id):
         """Update a bucketlist item."""
-        parser = reqparse.RequestParser()
-        parser.add_argument(
-            "name",
-            required=True,
-            help="Please enter new item name.")
-        parser.add_argument(
-                            "done",
-                            required=True,
-                            help="Please enter item status")
-        args = parser.parse_args()
-        name, done = args["name"], args["done"]
         items = Item.query.filter_by(bucketlist_id=id).all()
         if items:
+            parser = reqparse.RequestParser()
+            parser.add_argument(
+                "name",
+                required=True,
+                help="Please enter new item name.")
+            parser.add_argument(
+                                "done",
+                                required=True,
+                                help="Please enter item status")
+            args = parser.parse_args()
+            name, done = args["name"], args["done"]
+
             if int(item_id) <= len(items):
                 item_to_update = items[int(item_id) - 1]
                 item_to_update.name = name
@@ -83,6 +84,6 @@ class UpdateItem(Resource):
                             " already exists."}
                 return {"message": "Item updated succesfully"}
             else:
-                return {"message": "Item doesnot exist in the bucketlist"}
+                return {"message": "Item does not exist in the bucketlist"}
         else:
             return {"message": "That bucketlist has no items"}

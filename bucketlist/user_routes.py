@@ -55,7 +55,7 @@ class UserLogin(Resource):
             if user.verify_password(password):
                 token = user.generate_token()
                 return {"message": "Logged in successfully. Your token for"
-                        " making requests is below",
+                        " making requests has been generated",
                         "token": token.decode("ascii")}
             else:
                 return {"message": "Error: Incorrect password."

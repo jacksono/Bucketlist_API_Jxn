@@ -1,10 +1,8 @@
 """Contain helper functions."""
 
 from sqlalchemy.exc import IntegrityError
-from bucketlist.app import db
-from flask_restful import marshal
-from flask_restful import fields
-from bucketlist.app import app
+from bucketlist.app import db, app
+from flask_restful import marshal, fields
 from flask import g, request, jsonify
 from bucketlist.models import User, Bucketlist
 
@@ -41,7 +39,7 @@ def add_user(user_object):
         db.session.add(user_object)
         db.session.commit()
 
-        message = {"message": "You have successfully added a new user "}
+        message = {"message": "You have successfully registered."}
         user_serializer = {
                         "id": fields.Integer,
                         "username": fields.String}

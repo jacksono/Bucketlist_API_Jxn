@@ -11,7 +11,7 @@ from sqlalchemy.exc import IntegrityError
 
 
 def get_bucketlist(id):
-    """Get a single bucketlist."""
+    """Is a helper function to get a single bucketlist."""
     message = {}
     items_dict = {}
     items_list = []
@@ -108,13 +108,13 @@ class GetAllBucketLists(Resource):
                   "No. of pages": no_of_pages,
                   "Previous page": previous_page,
                   "Next page": next_page,
-                  "No. of bucketlists": len(list_of_bucketlists)
+                  "No. of bucketlists on page": len(list_of_bucketlists)
                   }
 
         if bucketlists:
             return output
         else:
-            return {"message": "ERROR! No bucketlist by {} matching that"
+            return {"message": "No bucketlist by {} matching that"
                     " request".format(g.user.username)}
 
 

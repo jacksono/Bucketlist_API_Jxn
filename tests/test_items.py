@@ -66,7 +66,7 @@ class TestItem(BaseTest):
         r = self.app.put("/api/v1/bucketlists/1/items/2", data=self.item,
                          headers=self.get_token())
         message = json.loads(r.data.decode())
-        self.assertIn("doesnot exist", message["message"])
+        self.assertIn("does not exist", message["message"])
 
     def test_message_when_user_updates_a_bucketlist_that_has_no_items(self):
         """Tests for an error message when a user tries to update a bucketlist which has no items.""" # noqa

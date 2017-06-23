@@ -14,7 +14,7 @@ class TestUser(BaseTest):
         r = self.app.post("/api/v1/auth/register", data=self.user)
         self.assertEqual(r.status_code, 201)
         message = json.loads(r.data.decode())
-        self.assertIn("new user", message["message"])
+        self.assertIn("successfully registered", message["message"])
         self.assertEqual(self.user["username"],
                          User.query.filter_by(
                              username="user3").first().username)
