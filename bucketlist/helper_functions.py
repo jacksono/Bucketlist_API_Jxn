@@ -39,10 +39,12 @@ def add_user(user_object):
         db.session.add(user_object)
         db.session.commit()
 
-        message = {"message": "You have successfully registered."}
+        message = {"message": "You have successfully registered."
+                   "Please login to get an access token"}
         user_serializer = {
                         "id": fields.Integer,
-                        "username": fields.String}
+                        "username": fields.String,
+                        "email": fields.String}
         response = marshal(user_object, user_serializer)
         response.update(message)
         return response, 201

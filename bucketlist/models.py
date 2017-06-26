@@ -35,7 +35,7 @@ class User(db.Model):
             app.config["SECRET_KEY"],
             expires_in=valid_for)
         return serializer.dumps({"id": self.id})
-#
+
     def validate_email(self, email):
         """Check if the email address is in the correct format."""
         if email:
