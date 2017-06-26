@@ -9,7 +9,7 @@ class TestItem(BaseTest):
 
     def get_token(self):
         """Return authentication token."""
-        self.user = {"username": "user",
+        self.user = {"email": "user@bucketlist.com",
                      "password": "password"}
         r = self.app.post("/api/v1/auth/login",
                           data=self.user)
