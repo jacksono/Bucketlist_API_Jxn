@@ -2,6 +2,7 @@
 from flask_restful import Resource, reqparse
 from bucketlist.models import User
 from bucketlist.helper_functions import add_user
+from validate_email import validate_email
 
 
 class Home(Resource):
@@ -34,8 +35,11 @@ class UserRegister(Resource):
         args = parser.parse_args()
         username, email, password = (args["username"], args["email"],
                                      args["password"])
-        user = User(username=username, email=email, password=password)
-        return add_user(user)
+        if validate_email(email):
+            user = User(username=username, email=email, password=password)
+            return add_user(user)
+        else:
+            return {"message": "Invalid email, Please check and try again"}
 
 
 class UserLogin(Resource):

@@ -44,6 +44,27 @@ class TestUser(BaseTest):
         self.assertIn("Please enter an email",
                       message['message']['email'])
 
+    def test_error_message_if_wrong_email_format_provided(self):
+        """Test for a message when a user tries to register without an  eamil."""  # noqa
+        self.user1 = {"username": "user", "email": "user",
+                      "password": "password"}
+        self.user2 = {"username": "user", "email": "user.com",
+                      "password": "password"}
+        self.user3 = {"username": "user", "email": "user*x.com",
+                      "password": "password"}
+        r1 = self.app.post("/api/v1/auth/register", data=self.user1)
+        r2 = self.app.post("/api/v1/auth/register", data=self.user2)
+        r3 = self.app.post("/api/v1/auth/register", data=self.user3)
+        message1 = json.loads(r1.data.decode())
+        message2 = json.loads(r2.data.decode())
+        message3 = json.loads(r3.data.decode())
+        self.assertIn("Invalid email",
+                      message1['message'])
+        self.assertIn("Invalid email",
+                      message2['message'])
+        self.assertIn("Invalid email",
+                      message3['message'])
+
     def test_error_message_if_password_not_provided_during_register(self):
         """Test for a message when a user tries to register without a password.""" # noqa
         self.user = {"username": "user", "email": "user@bucketlist.com"}

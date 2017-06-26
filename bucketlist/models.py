@@ -36,13 +36,6 @@ class User(db.Model):
             expires_in=valid_for)
         return serializer.dumps({"id": self.id})
 
-    def validate_email(self, email):
-        """Check if the email address is in the correct format."""
-        if email:
-            return True
-        else:
-            return False
-
     @staticmethod
     def verify_auth_token(token):
         """Verify token."""
