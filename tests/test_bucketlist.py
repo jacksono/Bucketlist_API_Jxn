@@ -88,7 +88,7 @@ class TestBucketlist(BaseTest):
         r = self.app.delete("/api/v1/bucketlists/2",
                             headers=self.get_token())
         message = json.loads(r.data.decode())
-        self.assertIn("doesnot exist", message["message"])
+        self.assertIn("does not exist", message["message"])
 
     def test_search_by_name_option_works(self):
         """Tests that a user can search for a bucketlist by name."""
