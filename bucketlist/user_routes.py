@@ -36,10 +36,15 @@ class UserRegister(Resource):
         username, email, password = (args["username"], args["email"],
                                      args["password"])
         if validate_email(email):
-            user = User(username=username, email=email, password=password)
-            return add_user(user)
+            if username.isalnum():
+                user = User(username=username, email=email, password=password)
+                return add_user(user)
+            else:
+                return {"message": "ERROR!, Username cannot contain"
+                        " special characters. Please check and try again"}
         else:
-            return {"message": "Invalid email, Please check and try again"}
+            return {"message": "ERROR!, Invalid email."
+                    " Please check and try again"}
 
 
 class UserLogin(Resource):
@@ -69,5 +74,4 @@ class UserLogin(Resource):
                 return {"message": "Error: Incorrect password."
                         " Please check and try again! "}
         else:
-            return {"message": "Error: User not found."
-                    " Please check and try again!"}
+            return {"message": "Error: That email is not yet registered."}

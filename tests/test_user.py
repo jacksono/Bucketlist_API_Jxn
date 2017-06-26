@@ -29,7 +29,7 @@ class TestUser(BaseTest):
         self.assertIn("already exists", message["message"])
 
     def test_error_message_if_username_not_provided_during_register(self):
-        """Test for a message when a user tries to register without a username."""  # noqa
+        """Test for a message whn a username isn't given during registering."""
         self.user = {"email": "user@bucket.com", "password": "password"}
         r = self.app.post("/api/v1/auth/register", data=self.user)
         message = json.loads(r.data.decode())
@@ -37,15 +37,24 @@ class TestUser(BaseTest):
                       message['message']['username'])
 
     def test_error_message_if_email_not_provided_during_register(self):
-        """Test for a message when a user tries to register without an  eamil."""  # noqa
+        """Test for a message when an email is'nt given during registering."""
         self.user = {"username": "user", "password": "password"}
         r = self.app.post("/api/v1/auth/register", data=self.user)
         message = json.loads(r.data.decode())
         self.assertIn("Please enter an email",
                       message['message']['email'])
 
+    def test_error_message_if_username_contains_special_characters(self):
+        """Test for a message when a username contains special characters."""
+        self.user = {"username": "user@#$", "email": "user@b.com",
+                     "password": "password"}
+        r = self.app.post("/api/v1/auth/register", data=self.user)
+        message = json.loads(r.data.decode())
+        self.assertIn("cannot contain special characters",
+                      message['message'])
+
     def test_error_message_if_wrong_email_format_provided(self):
-        """Test for a message when a user tries to register without an  eamil."""  # noqa
+        """Test for a message when the email is not in a correct format."""
         self.user1 = {"username": "user", "email": "user",
                       "password": "password"}
         self.user2 = {"username": "user", "email": "user.com",
@@ -105,10 +114,10 @@ class TestUser(BaseTest):
         self.assertIn("Incorrect password",
                       message["message"])
 
-    def test_error_message_if_wrong_email_is_provided_during_login(self):
-        """Test for a message when a user tries to login with a wrong email."""
+    def test_error_message_if_login_email_is_not_registered(self):
+        """Test for a message when a user tries to login with a wrong email that is not registered."""  # noqa
         self.user = {"email": "user1@bucket.com", "password": "password"}
         r = self.app.post("/api/v1/auth/login", data=self.user)
         message = json.loads(r.data.decode())
-        self.assertIn("User not found",
+        self.assertIn("That email is not yet registered",
                       message["message"])
