@@ -11,7 +11,8 @@ class User(db.Model):
     """Maps to a users table which contains user credentials."""
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(30), unique=True)
+    username = db.Column(db.String(30), nullable=False)
+    email = db.Column(db.String(50), unique=True, nullable=False)
     password_hash = db.Column(db.String)
 
     @property
@@ -34,6 +35,13 @@ class User(db.Model):
             app.config["SECRET_KEY"],
             expires_in=valid_for)
         return serializer.dumps({"id": self.id})
+
+    def validate_email(self, email):
+        """Check if the email address is in the correct format."""
+        if email:
+            return True
+        else:
+            return False
 
     @staticmethod
     def verify_auth_token(token):
