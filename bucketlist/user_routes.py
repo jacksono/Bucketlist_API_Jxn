@@ -45,16 +45,16 @@ class UserLogin(Resource):
         """Parse data through the header."""
         parser = reqparse.RequestParser()
         parser.add_argument(
-            "username",
+            "email",
             required=True,
-            help="Please enter a username.")
+            help="Please enter an email address.")
         parser.add_argument(
             "password",
             required=True,
             help="Please enter a password.")
         args = parser.parse_args()
-        username, password = args["username"], args["password"]
-        user = User.query.filter_by(username=username).first()
+        email, password = args["email"], args["password"]
+        user = User.query.filter_by(email=email).first()
         if user:
             if user.verify_password(password):
                 token = user.generate_token()
