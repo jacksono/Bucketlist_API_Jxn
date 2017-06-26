@@ -9,7 +9,20 @@ from datetime import datetime
 from sqlalchemy.exc import IntegrityError
 
 
-def get_bucketlist(id):
+def get_bucketlist_by_id(id):
+    """Get the a bucket list id as indexed for the current user."""
+    bucketlists = Bucketlist.query.filter_by(created_by=g.user.id).all()
+    if bucketlists:
+        if int(id) > 0 and int(id) <= len(bucketlists):
+            bucketlist = bucketlists[int(id) - 1]
+            return bucketlist
+        else:
+            return None
+    else:
+        return None
+
+
+def get_one_bucketlist(id):
     """Is a helper function to get a single bucketlist."""
     message = {}
     items_dict = {}
@@ -28,22 +41,18 @@ def get_bucketlist(id):
             item_id += 1
     else:
         items_list.append({"message": "No items yet"})
-    bucketlists = Bucketlist.query.filter_by(created_by=g.user.id).all()
-    if bucketlists:
-        if int(id) <= len(bucketlists):
-            bucketlist = bucketlists[int(id) - 1]
-            message["id"] = int(id)
-            message["name"] = bucketlist.title
-            message["description"] = bucketlist.description
-            message["items"] = items_list
-            message["date_created"] = str(bucketlist.date_created)
-            message["date_modified"] = str(bucketlist.date_modified)
-            message["created_by"] = bucketlist.created_by
-            return message
-        else:
-            return {"message": "That bucketlist does not exist"}
+    bucketlist = get_bucketlist_by_id(id)
+    if bucketlist:
+        message["id"] = int(id)
+        message["name"] = bucketlist.title
+        message["description"] = bucketlist.description
+        message["items"] = items_list
+        message["date_created"] = str(bucketlist.date_created)
+        message["date_modified"] = str(bucketlist.date_modified)
+        message["created_by"] = bucketlist.created_by
+        return message
     else:
-        return {"message": "You have no bucketlists yet"}
+        return {"message": "ERROR!, No bucketlists matching that request"}
 
 
 class CreateBucketList(Resource):
@@ -103,22 +112,19 @@ class GetAllBucketLists(Resource):
             previous_page = "None"
         list_of_bucketlists = []
         bucketlists = bucketlists.items
-        for number in range(len(bucketlists)):
-            list_of_bucketlists.append(get_bucketlist(number + 1))
-
-        output = {"Bucketlists": list_of_bucketlists,
-                  "Current Page": page,
-                  "No. of pages": no_of_pages,
-                  "Previous page": previous_page,
-                  "Next page": next_page,
-                  "No. of bucketlists on page": len(list_of_bucketlists)
-                  }
-
         if bucketlists:
+            for number in range(len(bucketlists)):
+                list_of_bucketlists.append(get_one_bucketlist(number + 1))
+            output = {"Bucketlists": list_of_bucketlists,
+                      "Current Page": page,
+                      "No. of pages": no_of_pages,
+                      "Previous page": previous_page,
+                      "Next page": next_page,
+                      "No. of bucketlists on page": len(list_of_bucketlists)
+                      }
             return output
         else:
-            return {"message": "No bucketlist by {} matching that"
-                    " request".format(g.user.username)}
+            return {"message": "No bucketlist by {}".format(g.user.email)}
 
 
 class GetSingleBucketList(Resource):
@@ -126,7 +132,7 @@ class GetSingleBucketList(Resource):
 
     def get(self, id):
         """Get a single bucketlist. Route /bucketlist/<id>/."""
-        return get_bucketlist(id)
+        return get_one_bucketlist(id)
 
 
 class UpdateBucketList(Resource):
@@ -145,17 +151,28 @@ class UpdateBucketList(Resource):
                             help="Please enter a new description")
         args = parser.parse_args()
         title, description = args["title"], args["description"]
-        bucketlist = Bucketlist.query.filter_by(id=id).first()
-        bucketlist.title = title
-        bucketlist.description = description
-        bucketlist.date_modified = datetime.now()
+        bucketlist = get_bucketlist_by_id(id)
+        if bucketlist:
+            if bucketlist.title == title or\
+             bucketlist.description == description:
+                return {"message": "ERROR: Please use a new Title"
+                        " and Description"}
+
+            else:
+                bucketlist.title = title
+                bucketlist.description = description
+                bucketlist.date_modified = datetime.now()
+        else:
+            return {"message": "ERROR! Cannot update a"
+                    " bucketlsit that doesnot exist"}
+
         try:
             db.session.add(bucketlist)
             db.session.commit()
         except IntegrityError:
-            """Show when the username already exists"""
+            """Show when the the title already exists"""
             db.session.rollback()
-            return {"message": "Error: " + title +
+            return {"message": "Error: Bucketlist with title " + title +
                     " already exists."}
         return {"message": "Bucket list updated succesfully"}
 
@@ -165,7 +182,7 @@ class DeleteBucketList(Resource):
 
     def delete(self, id):
         """Delete a bucketlist."""
-        bucketlist = Bucketlist.query.get(id)
+        bucketlist = get_bucketlist_by_id(id)
         if bucketlist:
             items = Item.query.filter_by(bucketlist_id=id).all()
             if items:
@@ -175,4 +192,5 @@ class DeleteBucketList(Resource):
             db.session.commit()
             return {"message": "Bucketlist deleted successfully"}
         else:
-            return {"message": "That bucketlist does not exist"}
+            return {"message": "ERROR! Cannot delete a"
+                    " bucketlsit that does not exist"}
