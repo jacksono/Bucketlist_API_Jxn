@@ -20,7 +20,8 @@ class BaseTest(TestCase):
         """Fixture to create test database and set up test client."""
         self.app = app.test_client()
         db.create_all()
-        user = User(username="user", password="password")
+        user = User(username="user", email="user@bucketlist.com",
+                    password="password")
 
         bucketlist = Bucketlist(title="Travel",
                                 description="Places I have to visit",

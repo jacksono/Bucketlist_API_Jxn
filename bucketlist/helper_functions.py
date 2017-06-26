@@ -52,7 +52,7 @@ def add_user(user_object):
     except IntegrityError:
         """Show when the username already exists"""
         db.session.rollback()
-        return {"message": "Error: " + user_object.username +
+        return {"message": "Error: " + user_object.email +
                 " already exists."}
 
 
