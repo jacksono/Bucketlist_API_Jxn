@@ -24,13 +24,17 @@ class UserRegister(Resource):
             required=True,
             help="Please enter a username.")
         parser.add_argument(
+            "email addres",
+            required=True,
+            help="Please enter an email address.")
+        parser.add_argument(
             "password",
             required=True,
             help="Please enter a password.")
         args = parser.parse_args()
-        username, password = args["username"], args["password"]
-        user = User(username=username,
-                    password=password)
+        username, email, password = (args["username"], args["email address"],
+                                     args["password"])
+        user = User(username=username, email=email, password=password)
         return add_user(user)
 
 
