@@ -2,9 +2,8 @@
 
 from sqlalchemy.exc import IntegrityError
 from bucketlist.app import db, app
-from flask_restful import marshal, fields
 from flask import g, request, jsonify
-from bucketlist.models import User, Bucketlist
+from bucketlist.models import User
 
 
 @app.before_request
@@ -41,13 +40,7 @@ def add_user(user_object):
 
         message = {"message": "You have successfully registered."
                    "Please login to get an access token"}
-        user_serializer = {
-                        "id": fields.Integer,
-                        "username": fields.String,
-                        "email": fields.String}
-        response = marshal(user_object, user_serializer)
-        response.update(message)
-        return response, 201
+        return message, 201
 
     except IntegrityError:
         """Show when the username already exists"""
@@ -62,17 +55,7 @@ def add_bucketlist(bucketlist_object):
         db.session.add(bucketlist_object)
         db.session.commit()
         message = {"message": "You have successfully added a new bucketlist."}
-        bucketlist_serializer = {
-                                "id": fields.Integer,
-                                "title": fields.String,
-                                "description": fields.String,
-                                "created_by": fields.Integer,
-                                "date_created": fields.DateTime,
-                                "date_modified": fields.DateTime
-                                }
-        response = marshal(bucketlist_object, bucketlist_serializer)
-        response.update(message)
-        return response, 201
+        return message, 201
 
     except IntegrityError:
         """Show when the bucketlist already exists"""
@@ -87,35 +70,10 @@ def add_item(item_object):
         db.session.add(item_object)
         db.session.commit()
         message = {"message": "Item created successfully."}
-        item_serializer = {
-                                "id": fields.Integer,
-                                "name": fields.String,
-                                "bucketlist_id": fields.Integer,
-                                "date_created": fields.DateTime,
-                                "date_modified": fields.DateTime,
-                                "done": fields.String
-                                }
-        response = marshal(item_object, item_serializer)
-        response.update(message)
-        return response, 201
+        return message, 201
 
     except IntegrityError:
         """Show when the item already exists"""
         db.session.rollback()
         return {"message": "Error: " + item_object.name +
                 " already exists."}
-
-
-def authorized_for_bucketlist(function):
-    """Verify if the bucketlist belongs to the current user."""
-    def auth_wrapper(*args, **kwargs):
-        """Set decorator."""
-        g.bucketlist = Bucketlist.query.filter_by(id=kwargs["id"]).first()
-        if g.bucketlist:
-            if g.bucketlist.created_by == g.user.id:
-                return function(*args, **kwargs)
-            return jsonify({"message": "Error: Cannot see / modify bucketlist"
-                            " created by someonelse"})
-        else:
-            return jsonify({"message": "That Bucketlist doesnot exist"})
-    return auth_wrapper

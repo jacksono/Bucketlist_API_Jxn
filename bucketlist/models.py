@@ -65,7 +65,7 @@ class Bucketlist(db.Model):
     date_modified = db.Column(db.DateTime,
                               onupdate=datetime.now)
 
-    created_by = db.Column(db.Integer, db.ForeignKey("user.id"))
+    created_by = db.Column(db.String(50), db.ForeignKey("user.email"))
     user = db.relationship("User",
                            backref=db.backref("user", lazy="dynamic"))
 
