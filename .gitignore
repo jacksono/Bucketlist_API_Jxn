@@ -1,0 +1,10 @@
+#ignore db files
+*.db
+.DS*
+
+#ignore pyc
+/__pycache__
+*.pyc
+
+# ignore coverage files
+.coverage
