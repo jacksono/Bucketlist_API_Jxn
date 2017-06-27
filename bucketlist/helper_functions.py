@@ -24,12 +24,12 @@ def before_request():
                 if user:
                     g.user = user
                 else:
-                    return jsonify({"message": "Error: Invalid Token"})
+                    return jsonify({"message": "Error: Invalid Token"}), 401
             else:
-                return jsonify({"message": "Error: Please enter a token"})
+                return jsonify({"message": "Error: Please enter a token"}), 401
         else:
             return jsonify({"message": "Error: Wrong URL or Incorrect request"
-                            " METHOD. Please check and try again"})
+                            " METHOD. Please check and try again"}), 400
 
 
 def add_user(user_object):
@@ -46,7 +46,7 @@ def add_user(user_object):
         """Show when the username already exists"""
         db.session.rollback()
         return {"message": "Error: " + user_object.email +
-                " already exists."}
+                " already exists."}, 400
 
 
 def add_bucketlist(bucketlist_object):
@@ -61,7 +61,7 @@ def add_bucketlist(bucketlist_object):
         """Show when the bucketlist already exists"""
         db.session.rollback()
         return {"message": "Error: " + bucketlist_object.title +
-                " already exists."}
+                " already exists."}, 400
 
 
 def add_item(item_object):
@@ -76,4 +76,4 @@ def add_item(item_object):
         """Show when the item already exists"""
         db.session.rollback()
         return {"message": "Error: " + item_object.name +
-                " already exists."}
+                " already exists."}, 400

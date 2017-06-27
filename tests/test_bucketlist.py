@@ -37,6 +37,7 @@ class TestBucketlist(BaseTest):
                            "created_by": 1}
         r = self.app.post("/api/v1/bucketlists/", data=self.bucketlist,
                           headers=self.get_token())
+        self.assertEqual(r.status_code, 400)
         message = json.loads(r.data.decode())
         self.assertIn("already exists", message["message"])
 
@@ -53,6 +54,7 @@ class TestBucketlist(BaseTest):
         self.app.delete("/api/v1/bucketlists/1",
                         headers=self.get_token())
         r = self.app.get("/api/v1/bucketlists/", headers=self.get_token())
+        self.assertEqual(r.status_code, 404)
         message = json.loads(r.data.decode())
         self.assertIn("No bucketlist", message["message"])
 
@@ -87,6 +89,7 @@ class TestBucketlist(BaseTest):
         """Tests that a user cannot delete a bucket list that doesnot exist."""
         r = self.app.delete("/api/v1/bucketlists/2",
                             headers=self.get_token())
+        self.assertEqual(r.status_code, 404)
         message = json.loads(r.data.decode())
         self.assertIn("does not exist", message["message"])
 

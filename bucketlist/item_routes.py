@@ -3,9 +3,23 @@
 from flask_restful import Resource, reqparse
 from bucketlist.models import Item
 from bucketlist.helper_functions import add_item
+from bucketlist.bucketlist_routes import get_bucketlist_by_id
 from bucketlist.app import db
 from datetime import datetime
 from sqlalchemy.exc import IntegrityError
+
+
+def get_item_by_id(bucketlist_id, item_id):
+    """Get an item as indexed for the current user."""
+    items = Item.query.filter_by(bucketlist_id=bucketlist_id).all()
+    if items:
+        if int(item_id) > 0 and int(item_id) <= len(items):
+            item = items[int(item_id) - 1]
+            return item
+        else:
+            return None
+    else:
+        return None
 
 
 class CreateItem(Resource):
@@ -24,7 +38,8 @@ class CreateItem(Resource):
                             help="Please enter the status")
         args = parser.parse_args()
         name, done = args["name"], args["done"]
-        item = Item(name=name, done=done, bucketlist_id=id)
+        bucketlist_id = get_bucketlist_by_id(id).id
+        item = Item(name=name, done=done, bucketlist_id=bucketlist_id)
         return add_item(item)
 
 
@@ -33,7 +48,8 @@ class DeleteItem(Resource):
 
     def delete(self, id, item_id):
         """Delete bucketlist item."""
-        items = Item.query.filter_by(bucketlist_id=id).all()
+        bucketlist_id = get_bucketlist_by_id(id).id
+        items = Item.query.filter_by(bucketlist_id=bucketlist_id).all()
         if items:
             if int(item_id) <= len(items):
                 item = items[int(item_id) - 1]
@@ -41,10 +57,10 @@ class DeleteItem(Resource):
                 db.session.commit()
                 return {"message": "Item deleted succesfully"}
             else:
-                return {"message": "That item doesnot exist"}
+                return {"message": "That item doesnot exist"}, 404
         else:
             return {"message": "ERROR!: That Bucketlist does not exists"
-                    " or does not have any items"}
+                    " or does not have any items"}, 404
 
 
 class UpdateItem(Resource):
@@ -52,7 +68,8 @@ class UpdateItem(Resource):
 
     def put(self, id, item_id):
         """Update a bucketlist item."""
-        items = Item.query.filter_by(bucketlist_id=id).all()
+        bucketlist_id = get_bucketlist_by_id(id).id
+        items = Item.query.filter_by(bucketlist_id=bucketlist_id).all()
         if items:
             parser = reqparse.RequestParser()
             parser.add_argument(
@@ -78,9 +95,9 @@ class UpdateItem(Resource):
                     """Show when the item already exists"""
                     db.session.rollback()
                     return {"message": "Error: " + item_to_update.name +
-                            " already exists."}
+                            " already exists."}, 400
                 return {"message": "Item updated succesfully"}
             else:
-                return {"message": "Item does not exist in the bucketlist"}
+                return {"message": "Item does not exist in the bucketlist"}, 404
         else:
-            return {"message": "That bucketlist has no items"}
+            return {"message": "That bucketlist has no items"}, 404

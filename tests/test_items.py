@@ -75,10 +75,10 @@ class TestItem(BaseTest):
         """Tests for an error message when a user tries to update a bucketlist which has no items.""" # noqa
         self.bucketlist = {"title": "Love",
                            "description": "I want to marry a princcess",
-                           "created_by": 1}
+                           "created_by": '1'}
         self.app.post("/api/v1/bucketlists/", data=self.bucketlist,
                       headers=self.get_token())
-        self.item = {"name": "Enjoy the beautiful beaches of Hawaii",
+        self.item = {"name": "Enjoy the beautiful sands of Hawaii",
                      "bucketlist_id": 1, "done": "True"}
         r = self.app.put("/api/v1/bucketlists/2/items/1", data=self.item,
                          headers=self.get_token())
