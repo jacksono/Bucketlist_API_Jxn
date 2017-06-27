@@ -98,6 +98,6 @@ class UpdateItem(Resource):
                             " already exists."}, 400
                 return {"message": "Item updated succesfully"}
             else:
-                return {"message": "Item does not exist in the bucketlist"}, 404
+                return {"message": "Item does not exist inthe bucketlist"}, 404
         else:
             return {"message": "That bucketlist has no items"}, 404

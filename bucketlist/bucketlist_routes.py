@@ -90,6 +90,7 @@ class GetAllBucketLists(Resource):
         page = int(args.get("page", 1))
         limit = int(args.get("limit", 20))
         search_by_name = args.get("q")
+        output = {}
         if search_by_name:
             bucketlists = Bucketlist.query.filter_by(
                 created_by=g.user.id, title=search_by_name).paginate(
@@ -104,25 +105,23 @@ class GetAllBucketLists(Resource):
         if has_next:
             next_page = (str(request.url_root) + "api/v1/bucketlists?" +
                          "limit=" + str(limit) + "&page=" + str(page + 1))
-        else:
-            next_page = "None"
+            output['Next Page'] = next_page
         if has_previous:
             previous_page = (request.url_root + "api/v1/bucketlists?" +
                              "limit=" + str(limit) + "&page=" + str(page - 1))
-        else:
-            previous_page = "None"
+            output['Previous Page'] = previous_page
         list_of_bucketlists = []
         bucketlists = bucketlists.items
         if bucketlists:
             for number in range(len(bucketlists)):
                 list_of_bucketlists.append(get_one_bucketlist(number + 1))
-            output = {"Bucketlists": list_of_bucketlists,
-                      "Current Page": page,
-                      "No. of pages": no_of_pages,
-                      "Previous page": previous_page,
-                      "Next page": next_page,
-                      "No. of bucketlists on page": len(list_of_bucketlists)
-                      }
+            output.update({"Bucketlists": list_of_bucketlists,
+                           "Current Page": page,
+                           "No. of pages": no_of_pages,
+                           "No. of bucketlists on page": len(
+                               list_of_bucketlists)
+                           })
+
             return output
         else:
             return {"message": "No bucketlist by {}".format(g.user.email)}, 404
