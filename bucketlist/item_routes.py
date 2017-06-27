@@ -48,7 +48,10 @@ class DeleteItem(Resource):
 
     def delete(self, id, item_id):
         """Delete bucketlist item."""
-        bucketlist_id = get_bucketlist_by_id(id).id
+        if get_bucketlist_by_id(id):
+            bucketlist_id = get_bucketlist_by_id(id).id
+        else:
+            return {"message": "ERROR!: That Bucketlist does not exists"}, 404
         items = Item.query.filter_by(bucketlist_id=bucketlist_id).all()
         if items:
             if int(item_id) <= len(items):
@@ -59,8 +62,8 @@ class DeleteItem(Resource):
             else:
                 return {"message": "That item doesnot exist"}, 404
         else:
-            return {"message": "ERROR!: That Bucketlist does not exists"
-                    " or does not have any items"}, 404
+            return {"message": "ERROR!: That Bucketlist does not "
+                    " have any items"}, 404
 
 
 class UpdateItem(Resource):
@@ -68,22 +71,24 @@ class UpdateItem(Resource):
 
     def put(self, id, item_id):
         """Update a bucketlist item."""
-        bucketlist_id = get_bucketlist_by_id(id).id
+        if get_bucketlist_by_id(id):
+            bucketlist_id = get_bucketlist_by_id(id).id
+        else:
+            return {"message": "That bucketlist does not exist"}, 404
         items = Item.query.filter_by(bucketlist_id=bucketlist_id).all()
         if items:
-            parser = reqparse.RequestParser()
-            parser.add_argument(
-                "name",
-                required=True,
-                help="Please enter new item name.")
-            parser.add_argument(
-                                "done",
-                                required=True,
-                                help="Please enter item status")
-            args = parser.parse_args()
-            name, done = args["name"], args["done"]
-
             if int(item_id) <= len(items):
+                parser = reqparse.RequestParser()
+                parser.add_argument(
+                    "name",
+                    required=True,
+                    help="Please enter new item name.")
+                parser.add_argument(
+                                    "done",
+                                    required=True,
+                                    help="Please enter item status")
+                args = parser.parse_args()
+                name, done = args["name"], args["done"]
                 item_to_update = items[int(item_id) - 1]
                 item_to_update.name = name
                 item_to_update.done = done
