@@ -41,10 +41,10 @@ class UserRegister(Resource):
                 return add_user(user)
             else:
                 return {"message": "ERROR!, Username cannot contain"
-                        " special characters. Please check and try again"}
+                        " special characters. Please check and try again"}, 400
         else:
             return {"message": "ERROR!, Invalid email."
-                    " Please check and try again"}
+                    " Please check and try again"}, 400
 
 
 class UserLogin(Resource):
@@ -72,6 +72,6 @@ class UserLogin(Resource):
                         "token": token.decode("ascii")}
             else:
                 return {"message": "Error: Incorrect password."
-                        " Please check and try again! "}
+                        " Please check and try again! "}, 400
         else:
-            return {"message": "Error: That email is not yet registered."}
+            return {"message": "Error: That email is not yet registered."}, 404

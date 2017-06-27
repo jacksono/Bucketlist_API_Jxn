@@ -25,6 +25,7 @@ class TestUser(BaseTest):
         self.user = {'username': 'user1', "email": "user@bucketlist.com",
                      "password": "password"}
         r = self.app.post("/api/v1/auth/register", data=self.user)
+        self.assertEqual(r.status_code, 400)
         message = json.loads(r.data.decode())
         self.assertIn("already exists", message["message"])
 
@@ -32,6 +33,7 @@ class TestUser(BaseTest):
         """Test for a message whn a username isn't given during registering."""
         self.user = {"email": "user@bucket.com", "password": "password"}
         r = self.app.post("/api/v1/auth/register", data=self.user)
+        self.assertEqual(r.status_code, 400)
         message = json.loads(r.data.decode())
         self.assertIn("Please enter a username",
                       message['message']['username'])
@@ -40,6 +42,7 @@ class TestUser(BaseTest):
         """Test for a message when an email is'nt given during registering."""
         self.user = {"username": "user", "password": "password"}
         r = self.app.post("/api/v1/auth/register", data=self.user)
+        self.assertEqual(r.status_code, 400)
         message = json.loads(r.data.decode())
         self.assertIn("Please enter an email",
                       message['message']['email'])
@@ -49,6 +52,7 @@ class TestUser(BaseTest):
         self.user = {"username": "user@#$", "email": "user@b.com",
                      "password": "password"}
         r = self.app.post("/api/v1/auth/register", data=self.user)
+        self.assertEqual(r.status_code, 400)
         message = json.loads(r.data.decode())
         self.assertIn("cannot contain special characters",
                       message['message'])
@@ -62,8 +66,11 @@ class TestUser(BaseTest):
         self.user3 = {"username": "user", "email": "user*x.com",
                       "password": "password"}
         r1 = self.app.post("/api/v1/auth/register", data=self.user1)
+        self.assertEqual(r1.status_code, 400)
         r2 = self.app.post("/api/v1/auth/register", data=self.user2)
+        self.assertEqual(r2.status_code, 400)
         r3 = self.app.post("/api/v1/auth/register", data=self.user3)
+        self.assertEqual(r3.status_code, 400)
         message1 = json.loads(r1.data.decode())
         message2 = json.loads(r2.data.decode())
         message3 = json.loads(r3.data.decode())
@@ -78,6 +85,7 @@ class TestUser(BaseTest):
         """Test for a message when a user tries to register without a password.""" # noqa
         self.user = {"username": "user", "email": "user@bucketlist.com"}
         r = self.app.post("/api/v1/auth/register", data=self.user)
+        self.assertEqual(r.status_code, 400)
         message = json.loads(r.data.decode())
         self.assertIn("Please enter a password",
                       message["message"]["password"])
@@ -94,6 +102,7 @@ class TestUser(BaseTest):
         """Test for a message when a user tries to login without an email."""
         self.user = {"password": "password"}
         r = self.app.post("/api/v1/auth/login", data=self.user)
+        self.assertEqual(r.status_code, 400)
         message = json.loads(r.data.decode())
         self.assertIn("Please enter an email",
                       message["message"]["email"])
@@ -110,14 +119,16 @@ class TestUser(BaseTest):
         """Test for a message when a user tries to login with a wrong password.""" # noqa
         self.user = {"email": "user@bucketlist.com", "password": "pass"}
         r = self.app.post("/api/v1/auth/login", data=self.user)
+        self.assertEqual(r.status_code, 400)
         message = json.loads(r.data.decode())
         self.assertIn("Incorrect password",
                       message["message"])
 
     def test_error_message_if_login_email_is_not_registered(self):
-        """Test for a message when a user tries to login with a wrong email that is not registered."""  # noqa
+        """Test for a message when a user tries to login with an email that is not registered."""  # noqa
         self.user = {"email": "user1@bucket.com", "password": "password"}
         r = self.app.post("/api/v1/auth/login", data=self.user)
+        self.assertEqual(r.status_code, 404)
         message = json.loads(r.data.decode())
         self.assertIn("That email is not yet registered",
                       message["message"])

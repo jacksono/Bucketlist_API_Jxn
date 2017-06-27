@@ -27,7 +27,8 @@ def get_one_bucketlist(id):
     message = {}
     items_dict = {}
     items_list = []
-    items = Item.query.filter_by(bucketlist_id=id).all()
+    bucketlist_id = get_bucketlist_by_id(id).id
+    items = Item.query.filter_by(bucketlist_id=bucketlist_id).all()
     if items:
         item_id = 1
         for item in items:
@@ -52,7 +53,7 @@ def get_one_bucketlist(id):
         message["created_by"] = bucketlist.created_by
         return message
     else:
-        return {"message": "ERROR!, No bucketlists matching that request"}
+        return {"message": "ERROR!, No bucketlists matching that request"}, 404
 
 
 class CreateBucketList(Resource):
@@ -124,7 +125,7 @@ class GetAllBucketLists(Resource):
                       }
             return output
         else:
-            return {"message": "No bucketlist by {}".format(g.user.email)}
+            return {"message": "No bucketlist by {}".format(g.user.email)}, 404
 
 
 class GetSingleBucketList(Resource):
@@ -164,7 +165,7 @@ class UpdateBucketList(Resource):
                 bucketlist.date_modified = datetime.now()
         else:
             return {"message": "ERROR! Cannot update a"
-                    " bucketlsit that doesnot exist"}
+                    " bucketlsit that doesnot exist"}, 404
 
         try:
             db.session.add(bucketlist)
@@ -193,4 +194,4 @@ class DeleteBucketList(Resource):
             return {"message": "Bucketlist deleted successfully"}
         else:
             return {"message": "ERROR! Cannot delete a"
-                    " bucketlsit that does not exist"}
+                    " bucketlsit that does not exist"}, 404
