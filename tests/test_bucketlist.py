@@ -103,8 +103,14 @@ class TestBucketlist(BaseTest):
 
     def test_pagination_option_works(self):
         """Tests that a bucketlists are paginated."""
-        r = self.app.get("/api/v1/bucketlists/?limit=2",
+        self.bucketlist = {"title": "Love",
+                           "description": "I want to marry a princess",
+                           "created_by": 1}
+        self.app.post("/api/v1/bucketlists/", data=self.bucketlist,
+                      headers=self.get_token())
+        r = self.app.get("/api/v1/bucketlists/?limit=1",
                          headers=self.get_token())
         self.assertEqual(r.status_code, 200)
         message = json.loads(r.data.decode())
-        self.assertIn("Next page", message)
+        self.assertEqual("http://localhost/api/v1/bucketlists?limit=1&page=2",
+                         message['Next Page'])
