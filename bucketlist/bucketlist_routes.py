@@ -132,7 +132,10 @@ class GetSingleBucketList(Resource):
 
     def get(self, id):
         """Get a single bucketlist. Route /bucketlist/<id>/."""
-        return get_one_bucketlist(id)
+        if get_bucketlist_by_id(id):
+            return get_one_bucketlist(id)
+        else:
+            return {"message": "That bucketlist does not exist"}, 404
 
 
 class UpdateBucketList(Resource):
@@ -140,6 +143,9 @@ class UpdateBucketList(Resource):
 
     def put(self, id):
         """Update bucketlist."""
+        if not get_bucketlist_by_id(id):
+            return {"message": "ERROR! Cannot update a"
+                    " bucketlsit that doesnot exist"}, 404
         parser = reqparse.RequestParser()
         parser.add_argument(
             "title",
@@ -152,20 +158,15 @@ class UpdateBucketList(Resource):
         args = parser.parse_args()
         title, description = args["title"], args["description"]
         bucketlist = get_bucketlist_by_id(id)
-        if bucketlist:
-            if bucketlist.title == title or\
-             bucketlist.description == description:
-                return {"message": "ERROR: Please use a new Title"
-                        " and Description"}
+        if bucketlist.title == title or\
+           bucketlist.description == description:
+            return {"message": "ERROR: Please use a new Title"
+                    " and Description"}
 
-            else:
-                bucketlist.title = title
-                bucketlist.description = description
-                bucketlist.date_modified = datetime.now()
         else:
-            return {"message": "ERROR! Cannot update a"
-                    " bucketlsit that doesnot exist"}, 404
-
+            bucketlist.title = title
+            bucketlist.description = description
+            bucketlist.date_modified = datetime.now()
         try:
             db.session.add(bucketlist)
             db.session.commit()
