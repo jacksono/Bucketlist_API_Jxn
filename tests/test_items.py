@@ -92,3 +92,13 @@ class TestItem(BaseTest):
         message = json.loads(r.data.decode())
         self.assertIn("deleted succesfully", message["message"])
         self.assertFalse(Item.query.all())
+
+    def test_item_done_field_accepts_Y_or_N_only(self):
+        """Tests that the item done field accpets Y/y and N/n only."""
+        self.item = {"name": "Go to Hawaii", "done": "True",
+                     "buckeltist_id": 1}
+        r = self.app.post("/api/v1/bucketlists/1/items/", data=self.item,
+                          headers=self.get_token())
+        self.assertEqual(r.status_code, 200)
+        message = json.loads(r.data.decode())
+        self.assertIn("use Y/N or y/n", message["message"])
