@@ -35,9 +35,15 @@ class CreateItem(Resource):
         parser.add_argument(
                             "done",
                             required=True,
-                            help="Please enter the status")
+                            help="Please enter the 'Y/N' or 'y/n' for status")
         args = parser.parse_args()
         name, done = args["name"], args["done"]
+        if done.lower() == 'y':
+            done = True
+        elif done.lower() == 'n':
+            done = False
+        else:
+            return {'message': "Please enter the 'Y/N' or 'y/n' for status"}
         bucketlist_id = get_bucketlist_by_id(id).id
         item = Item(name=name, done=done, bucketlist_id=bucketlist_id)
         return add_item(item)

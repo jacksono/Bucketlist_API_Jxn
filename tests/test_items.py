@@ -19,7 +19,7 @@ class TestItem(BaseTest):
 
     def test_can_add_new_item(self):
         """Tests if a user can add a new item in a bucketlist."""
-        self.item = {"name": "Go to Hawaii", "done": "True",
+        self.item = {"name": "Go to Hawaii", "done": "y",
                      "buckeltist_id": 1}
         r = self.app.post("/api/v1/bucketlists/1/items/", data=self.item,
                           headers=self.get_token())
@@ -30,7 +30,7 @@ class TestItem(BaseTest):
     def test_shows_message_when_item_already_exists(self):
         """Tests that a message is shown when an item already exists."""
         self.item = {"name": "Enjoy the beautiful beaches of Hawaii",
-                     "done": "True", "buckeltist_id": 1}
+                     "done": "Y", "buckeltist_id": 1}
         r = self.app.post("/api/v1/bucketlists/1/items/", data=self.item,
                           headers=self.get_token())
         message = json.loads(r.data.decode())
@@ -51,7 +51,7 @@ class TestItem(BaseTest):
 
         shown when a user tries to update to a item name which already exists.
         """
-        self.item = {"name": "Go to Hawaii", "done": "True",
+        self.item = {"name": "Go to Hawaii", "done": "y",
                      "buckeltist_id": 1}
         self.app.post("/api/v1/bucketlists/1/items/", data=self.item,
                       headers=self.get_token())
