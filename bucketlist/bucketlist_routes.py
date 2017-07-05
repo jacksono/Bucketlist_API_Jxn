@@ -1,8 +1,9 @@
 """Module to define buckeltist endpoints."""
 
-from flask_restful import Resource, reqparse
+from flask_restful import Resource, reqparse, marshal
 from bucketlist.models import Bucketlist, Item
-from bucketlist.helper_functions import (add_bucketlist)
+from bucketlist.helper_functions import (add_bucketlist,
+                                         bucketlist_serializer)
 from flask import g, request
 from bucketlist.app import db
 from datetime import datetime
@@ -175,7 +176,10 @@ class UpdateBucketList(Resource):
             db.session.rollback()
             return {"message": "Error: Bucketlist with title " + title +
                     " already exists."}
-        return {"message": "Bucket list updated succesfully"}
+        message = {"message": "Bucket list updated succesfully"}
+        bucketlist.id = id
+        message.update(marshal(bucketlist, bucketlist_serializer))
+        return message
 
 
 class DeleteBucketList(Resource):

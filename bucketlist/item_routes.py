@@ -1,8 +1,8 @@
 """Module to define items endpoints."""
 
-from flask_restful import Resource, reqparse
+from flask_restful import Resource, reqparse, marshal
 from bucketlist.models import Item
-from bucketlist.helper_functions import add_item
+from bucketlist.helper_functions import add_item, item_serializer
 from bucketlist.bucketlist_routes import get_bucketlist_by_id
 from bucketlist.app import db
 from datetime import datetime
@@ -95,7 +95,15 @@ class UpdateItem(Resource):
                                     help="Please enter item status")
                 args = parser.parse_args()
                 name, done = args["name"], args["done"]
+                if done.lower() == 'y':
+                    done = True
+                elif done.lower() == 'n':
+                    done = False
+                else:
+                    return {'message': "Please use Y/N or y/n for status"}
                 item_to_update = items[int(item_id) - 1]
+                if name == item_to_update.name:
+                    return {'message': "ERROR! Use a new name"}
                 item_to_update.name = name
                 item_to_update.done = done
                 item_to_update.date_modified = datetime.now()
@@ -107,7 +115,11 @@ class UpdateItem(Resource):
                     db.session.rollback()
                     return {"message": "Error: " + item_to_update.name +
                             " already exists."}, 400
-                return {"message": "Item updated succesfully"}
+                message = {"message": "Item updated succesfully"}
+                item_to_update.id = item_id
+                item_to_update.bucketlist_id = id
+                message.update(marshal(item_to_update, item_serializer))
+                return message
             else:
                 return {"message": "Item does not exist inthe bucketlist"}, 404
         else:
