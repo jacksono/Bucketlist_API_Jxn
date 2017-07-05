@@ -38,7 +38,7 @@ class TestItem(BaseTest):
 
     def test_user_can_update_a_bucketlist_item(self):
         """Tests that a user can update an existing bucketlist item."""
-        self.item = {"name": "New Item", "bucketlist_id": 1, "done": "True"}
+        self.item = {"name": "New Item", "bucketlist_id": 1, "done": "y"}
         r = self.app.put("/api/v1/bucketlists/1/items/1", data=self.item,
                          headers=self.get_token())
         self.assertEqual(r.status_code, 200)
@@ -56,7 +56,7 @@ class TestItem(BaseTest):
         self.app.post("/api/v1/bucketlists/1/items/", data=self.item,
                       headers=self.get_token())
         self.item2 = {"name": "Enjoy the beautiful beaches of Hawaii",
-                      "bucketlist_id": 1, "done": "True"}
+                      "bucketlist_id": 1, "done": "y"}
         r = self.app.put("/api/v1/bucketlists/1/items/2", data=self.item2,
                          headers=self.get_token())
         message = json.loads(r.data.decode())
