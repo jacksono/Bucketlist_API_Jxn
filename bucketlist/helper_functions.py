@@ -6,6 +6,25 @@ from flask import g, request, jsonify
 from bucketlist.models import User, Bucketlist, Item
 from flask_restful import marshal, fields
 
+# Define serialisers
+user_serializer = {"id": fields.Integer,
+                   "username": fields.String,
+                   "email": fields.String}
+
+item_serializer = {"id": fields.Integer,
+                   "name": fields.String,
+                   "done": fields.Boolean,
+                   "date_created": fields.DateTime,
+                   "date_modified": fields.DateTime,
+                   "bucketlist_id": fields.Integer}
+
+bucketlist_serializer = {"id": fields.Integer,
+                         "title": fields.String,
+                         "description": fields.String,
+                         "created_by": fields.Integer,
+                         "date_created": fields.DateTime,
+                         "date_modified": fields.DateTime}
+
 
 @app.before_request
 def before_request():
@@ -38,10 +57,6 @@ def add_user(user_object):
     try:
         db.session.add(user_object)
         db.session.commit()
-        user_serializer = {"id": fields.Integer,
-                           "username": fields.String,
-                           "email": fields.String}
-
         message = {"message": "You have successfully registered."
                    "Please login to get an access token"}
         message.update(marshal(user_object, user_serializer))
@@ -59,12 +74,6 @@ def add_bucketlist(bucketlist_object):
     try:
         db.session.add(bucketlist_object)
         db.session.commit()
-        bucketlist_serializer = {"id": fields.Integer,
-                                 "title": fields.String,
-                                 "description": fields.String,
-                                 "created_by": fields.Integer,
-                                 "date_created": fields.DateTime,
-                                 "date_modified": fields.DateTime}
         message = {"message": "You have successfully added a new bucketlist."}
         no_of_user_bucketlists = len(Bucketlist.query.filter_by(
                                     created_by=g.user.id).all())
@@ -84,12 +93,6 @@ def add_item(item_object, bucketlist_id, id):
     try:
         db.session.add(item_object)
         db.session.commit()
-        item_serializer = {"id": fields.Integer,
-                           "name": fields.String,
-                           "done": fields.Boolean,
-                           "date_created": fields.DateTime,
-                           "date_modified": fields.DateTime,
-                           "bucketlist_id": fields.Integer}
         message = {"message": "Item created successfully."}
         no_of_bucketlist_items = len(Item.query.filter_by(
             bucketlist_id=bucketlist_id).all())
