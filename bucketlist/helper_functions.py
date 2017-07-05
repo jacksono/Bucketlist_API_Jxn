@@ -3,7 +3,7 @@
 from sqlalchemy.exc import IntegrityError
 from bucketlist.app import db, app
 from flask import g, request, jsonify
-from bucketlist.models import User
+from bucketlist.models import User, Bucketlist
 from flask_restful import marshal, fields
 
 
@@ -59,7 +59,17 @@ def add_bucketlist(bucketlist_object):
     try:
         db.session.add(bucketlist_object)
         db.session.commit()
+        bucketlist_serializer = {"id": fields.Integer,
+                                 "title": fields.String,
+                                 "description": fields.String,
+                                 "created_by": fields.Integer,
+                                 "date_created": fields.DateTime,
+                                 "date_modified": fields.DateTime}
         message = {"message": "You have successfully added a new bucketlist."}
+        user_bucketlists = len(Bucketlist.query.filter_by(
+                                    created_by=g.user.id).all())
+        bucketlist_object.id = user_bucketlists
+        message.update(marshal(bucketlist_object, bucketlist_serializer))
         return message, 201
 
     except IntegrityError:
