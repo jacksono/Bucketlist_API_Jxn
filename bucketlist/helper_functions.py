@@ -3,7 +3,7 @@
 from sqlalchemy.exc import IntegrityError
 from bucketlist.app import db, app
 from flask import g, request, jsonify
-from bucketlist.models import User, Bucketlist
+from bucketlist.models import User, Bucketlist, Item
 from flask_restful import marshal, fields
 
 
@@ -66,9 +66,9 @@ def add_bucketlist(bucketlist_object):
                                  "date_created": fields.DateTime,
                                  "date_modified": fields.DateTime}
         message = {"message": "You have successfully added a new bucketlist."}
-        user_bucketlists = len(Bucketlist.query.filter_by(
+        no_of_user_bucketlists = len(Bucketlist.query.filter_by(
                                     created_by=g.user.id).all())
-        bucketlist_object.id = user_bucketlists
+        bucketlist_object.id = no_of_user_bucketlists
         message.update(marshal(bucketlist_object, bucketlist_serializer))
         return message, 201
 
@@ -79,12 +79,23 @@ def add_bucketlist(bucketlist_object):
                 " already exists."}, 400
 
 
-def add_item(item_object):
+def add_item(item_object, bucketlist_id, id):
     """Add an item to the bucketlist in the database."""
     try:
         db.session.add(item_object)
         db.session.commit()
+        item_serializer = {"id": fields.Integer,
+                           "name": fields.String,
+                           "done": fields.Boolean,
+                           "date_created": fields.DateTime,
+                           "date_modified": fields.DateTime,
+                           "bucketlist_id": fields.Integer}
         message = {"message": "Item created successfully."}
+        no_of_bucketlist_items = len(Item.query.filter_by(
+            bucketlist_id=bucketlist_id).all())
+        item_object.id = no_of_bucketlist_items
+        item_object.bucketlist_id = id
+        message.update(marshal(item_object, item_serializer))
         return message, 201
 
     except IntegrityError:

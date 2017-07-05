@@ -46,7 +46,7 @@ class CreateItem(Resource):
             return {'message': "Please use Y/N or y/n for status"}
         bucketlist_id = get_bucketlist_by_id(id).id
         item = Item(name=name, done=done, bucketlist_id=bucketlist_id)
-        return add_item(item)
+        return add_item(item, bucketlist_id, id)
 
 
 class DeleteItem(Resource):
