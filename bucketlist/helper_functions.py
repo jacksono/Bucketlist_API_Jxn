@@ -4,6 +4,7 @@ from sqlalchemy.exc import IntegrityError
 from bucketlist.app import db, app
 from flask import g, request, jsonify
 from bucketlist.models import User
+from flask_restful import marshal, fields
 
 
 @app.before_request
@@ -37,9 +38,13 @@ def add_user(user_object):
     try:
         db.session.add(user_object)
         db.session.commit()
+        user_serializer = {"id": fields.Integer,
+                           "username": fields.String,
+                           "email": fields.String}
 
         message = {"message": "You have successfully registered."
                    "Please login to get an access token"}
+        message.update(marshal(user_object, user_serializer))
         return message, 201
 
     except IntegrityError:
