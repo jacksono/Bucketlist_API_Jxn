@@ -35,6 +35,9 @@ class UserRegister(Resource):
         args = parser.parse_args()
         username, email, password = (args["username"], args["email"],
                                      args["password"])
+        if len(password) < 6:
+            return {"message": "ERROR!, Password must be at"
+                    " least 6 characters"}, 400
         if validate_email(email):
             if username.isalnum():
                 user = User(username=username, email=email, password=password)
