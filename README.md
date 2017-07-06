@@ -16,7 +16,7 @@ to have or accomplish during their lifetime*.
 ## How to Install and Set it up
 Clone the repo from GitHub:
 ```
-$ git clone
+$ git clone https://github.com/jacksono/Bucketlist_API_Jxn.git
 ```
 
 Navigate to the root folder of the repo:
