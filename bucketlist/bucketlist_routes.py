@@ -8,6 +8,7 @@ from flask import g, request
 from bucketlist.app import db
 from datetime import datetime
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import func
 
 
 def get_bucketlist_by_id(id):
@@ -108,8 +109,10 @@ class GetAllBucketLists(Resource):
         search_by_name = args.get("q")
         output = {}
         if search_by_name:
-            bucketlists = Bucketlist.query.filter_by(
-                created_by=g.user.id, title=search_by_name).paginate(
+            results = Bucketlist.query.filter(func.lower(
+                Bucketlist.title).contains(search_by_name.lower()))
+            bucketlists = results.filter_by(
+                created_by=g.user.id).paginate(
                 page=page, per_page=limit, error_out=False)
         else:
             bucketlists = Bucketlist.query.filter_by(
@@ -140,7 +143,8 @@ class GetAllBucketLists(Resource):
 
             return output
         else:
-            return {"message": "No bucketlist by {}".format(g.user.email)}, 404
+            return {"message": "No bucketlist by {} matching that"
+                    " request".format(g.user.email)}, 404
 
 
 class GetSingleBucketList(Resource):
