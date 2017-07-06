@@ -34,18 +34,9 @@ class TestRoutes(TestCase):
             r1 = self.app.get("/api/v1/x")
             r2 = self.app.get("/x")
             r3 = self.app.get("/login/x")
-            output1 = json.loads(r1.data.decode())
-            output2 = json.loads(r2.data.decode())
-            output3 = json.loads(r3.data.decode())
-            self.assertEqual(output1,
-                             {"message": "Error: Wrong URL or Incorrect"
-                              " request METHOD. Please check and try again"})
-            self.assertEqual(output2,
-                             {"message": "Error: Wrong URL or Incorrect"
-                              " request METHOD. Please check and try again"})
-            self.assertEqual(output3,
-                             {"message": "Error: Wrong URL or Incorrect"
-                              " request METHOD. Please check and try again"})
+            self.assertEqual(r1.status_code, 404)
+            self.assertEqual(r2.status_code, 404)
+            self.assertEqual(r3.status_code, 404)
 
     def test_wrong_route_method_shows_error_message(self):
             """Tests response to a wrong route method ."""
@@ -56,14 +47,14 @@ class TestRoutes(TestCase):
             output2 = json.loads(r2.data.decode())
             output3 = json.loads(r3.data.decode())
             self.assertEqual(output1,
-                             {"message": "Error: Wrong URL or Incorrect"
-                              " request METHOD. Please check and try again"})
+                             {"message": "The method is not allowed"
+                              " for the requested URL."})
             self.assertEqual(output2,
-                             {"message": "Error: Wrong URL or Incorrect"
-                              " request METHOD. Please check and try again"})
+                             {"message": "The method is not allowed"
+                              " for the requested URL."})
             self.assertEqual(output3,
-                             {"message": "Error: Wrong URL or Incorrect"
-                              " request METHOD. Please check and try again"})
+                             {"message": "The method is not allowed"
+                              " for the requested URL."})
 
     def test_private_routes_not_accesible_without_a_token(self):
             """Tests that users can't access private routes without a token."""

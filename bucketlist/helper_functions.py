@@ -26,31 +26,27 @@ bucketlist_serializer = {"id": fields.Integer,
                          "date_modified": fields.DateTime}
 
 
-# @app.before_request
+@app.before_request
 def before_request():
     """Set global attributes."""
-    if request.endpoint not in ["userlogin", "userregister", "home"]:
-        if request.endpoint in ["createitem",
-                                "updateitem",
-                                "deleteitem",
-                                "createbucketlist",
-                                "getallbucketlists",
-                                "getsinglebucketlist",
-                                "updatebucketlist",
-                                "deletebucketlist"]:
-            token = request.headers.get("token")
-            if token is not None:
-                user = User.verify_auth_token(token)
-                if user == "Expired":
-                    return jsonify({"message": "Error: Expired Token"}), 401
-                if user == "Invalid":
-                    return jsonify({"message": "Error: Invalid Token"}), 401
-                g.user = user
-            else:
-                return jsonify({"message": "Error: Please enter a token"}), 401
+    if request.endpoint in ["createitem",
+                            "updateitem",
+                            "deleteitem",
+                            "createbucketlist",
+                            "getallbucketlists",
+                            "getsinglebucketlist",
+                            "updatebucketlist",
+                            "deletebucketlist"]:
+        token = request.headers.get("token")
+        if token is not None:
+            user = User.verify_auth_token(token)
+            if user == "Expired":
+                return jsonify({"message": "Error: Expired Token"}), 401
+            if user == "Invalid":
+                return jsonify({"message": "Error: Invalid Token"}), 401
+            g.user = user
         else:
-            return jsonify({"message": "Error: Wrong URL or Incorrect request"
-                            " METHOD. Please check and try again"}), 404
+            return jsonify({"message": "Error: Please enter a token"}), 401
 
 
 def add_user(user_object):

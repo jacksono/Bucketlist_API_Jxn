@@ -9,6 +9,7 @@ from bucketlist.bucketlist_routes import (CreateBucketList,
 from bucketlist.item_routes import CreateItem, UpdateItem, DeleteItem
 from bucketlist.app import api, app
 
+
 # Create api endpoints
 api.add_resource(Home, "/")
 api.add_resource(UserLogin, "/auth/login")
