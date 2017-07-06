@@ -16,28 +16,31 @@ to have or accomplish during their lifetime*.
 ## How to Install and Set it up
 Clone the repo from GitHub:
 ```
-~ git clone
+$ git clone
 ```
 
 Navigate to the root folder of the repo:
 ```
-~ cd Bucketlist_API_Jxn
+$ cd Bucketlist_API_Jxn
 ```
 
 Install the required packages:
 ```
-~ pip install -r requirements.txt
+$ pip install -r requirements.txt
 ```
 
 Initialize, migrate, and upgrade the database:
 ```
-~ python manage.py db init
-~ python manage.py db migrate
-~ python manage.py db upgrade
+$ python manage.py db init
+$ python manage.py db migrate
+$ python manage.py db upgrade
 ```
 
 ## How to run the API
-Run the command ```~ python start.py```.
+Run the command 
+```
+$ python start.py
+```
 You may use [Postman](https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop?hl=en) for Google Chrome to run the API.
 
 ## API Endpoints
@@ -62,18 +65,21 @@ You may use [Postman](https://chrome.google.com/webstore/detail/postman/fhbjgbif
 ## Screenshots
 
 To register a new user:
-![User Registration]
+<img width="1048" alt="screen shot 2017-07-06 at 10 07 10" src="https://user-images.githubusercontent.com/4943363/27900140-c1340304-6235-11e7-8d6d-7e8ec16ffb3b.png">
 
 To log the user in:
-![User Login]
+<img width="1048" alt="screen shot 2017-07-06 at 10 08 05" src="https://user-images.githubusercontent.com/4943363/27900188-04baaed4-6236-11e7-80eb-4fb06f7cb512.png">
 
-To add a new bucket list (includes the token in the header):
-![Adding Bucket List]
+To add a new bucketlist (use the token in the login page in the header):
+<img width="1018" alt="screen shot 2017-07-06 at 10 12 37" src="https://user-images.githubusercontent.com/4943363/27900229-2b864384-6236-11e7-9b16-dd6c388dd364.png">
+
+To add a new bucketlist item (use the token in the login page in the header):
+<img width="801" alt="screen shot 2017-07-06 at 10 22 06" src="https://user-images.githubusercontent.com/4943363/27900279-6897b780-6236-11e7-8be5-7a032a6645a7.png">
 
 ## How to test
 To test, run the following command:
 ```
-~ nosetests
+$ nosetests
 ```
 
 ## Built With...
