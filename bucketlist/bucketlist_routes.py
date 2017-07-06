@@ -73,11 +73,14 @@ class CreateBucketList(Resource):
                             help="Please enter a description")
         args = parser.parse_args()
         title, description = args["title"], args["description"]
-        bucketlist = Bucketlist(title=title,
-                                description=description,
-                                created_by=g.user.id)
-        return add_bucketlist(bucketlist)
-
+        if title and description:
+            bucketlist = Bucketlist(title=title,
+                                    description=description,
+                                    created_by=g.user.id)
+            return add_bucketlist(bucketlist)
+        else:
+            return {"message": "ERROR! Title and/or"
+                    " Description can not be empty"}, 400
 
 class GetAllBucketLists(Resource):
     """Shows all bucketlists. Route: /api/v1/auth/bucketlists/ using GET."""

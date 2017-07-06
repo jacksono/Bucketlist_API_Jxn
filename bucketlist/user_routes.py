@@ -44,7 +44,8 @@ class UserRegister(Resource):
                 return add_user(user)
             else:
                 return {"message": "ERROR!, Username cannot contain"
-                        " special characters. Please check and try again"}, 400
+                        " special characters or spaces."
+                        " Please check and try again"}, 400
         else:
             return {"message": "ERROR!, Invalid email."
                     " Please check and try again"}, 400
