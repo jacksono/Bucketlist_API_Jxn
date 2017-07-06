@@ -3,6 +3,8 @@
 [![Code Issues](https://www.quantifiedcode.com/api/v1/project/8e4ded420a0c437da424430ddbca1ac3/badge.svg)](https://www.quantifiedcode.com/app/project/8e4ded420a0c437da424430ddbca1ac3)
 ![alt text](https://img.shields.io/badge/python-3.4-blue.svg)
 [![DUB](https://img.shields.io/dub/l/vibe-d.svg)]()
+[![pep 8](https://img.shields.io/badge/code%20style-Pep%208-green.svg)](https://www.python.org/dev/peps/pep-0008/)
+[![state badge](https://img.shields.io/badge/state-Alpha-red.svg)]()
 
 
 # Bucketlist_API_Jxn
