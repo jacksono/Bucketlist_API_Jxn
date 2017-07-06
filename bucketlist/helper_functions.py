@@ -41,10 +41,11 @@ def before_request():
             token = request.headers.get("token")
             if token is not None:
                 user = User.verify_auth_token(token)
-                if user:
-                    g.user = user
-                else:
+                if user == "Expired":
+                    return jsonify({"message": "Error: Expired Token"}), 401
+                if user == "Invalid":
                     return jsonify({"message": "Error: Invalid Token"}), 401
+                g.user = user
             else:
                 return jsonify({"message": "Error: Please enter a token"}), 401
         else:

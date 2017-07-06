@@ -3,8 +3,8 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from bucketlist.app import db, app
-from itsdangerous import (TimedJSONWebSignatureSerializer  # noqa
-                          as Serializer, BadSignature,)  # SignatureExpired)
+from itsdangerous import (TimedJSONWebSignatureSerializer
+                          as Serializer, BadSignature, SignatureExpired)
 
 
 class User(db.Model):
@@ -29,8 +29,8 @@ class User(db.Model):
         """Compare password_hashes with that saved in the table for user."""
         return check_password_hash(self.password_hash, password)
 
-    def generate_token(self, valid_for=30000):
-        """Generate a token expiring in 30 minutes."""
+    def generate_token(self, valid_for=20000):
+        """Generate a token expiring in 20 minutes."""
         serializer = Serializer(
             app.config["SECRET_KEY"],
             expires_in=valid_for)
@@ -42,10 +42,10 @@ class User(db.Model):
         serializer = Serializer(app.config["SECRET_KEY"])
         try:
             data = serializer.loads(token)
-        # except SignatureExpired:
-        #     return None
+        except SignatureExpired:
+            return "Expired"
         except BadSignature:
-            return None
+            return "Invalid"
 
         user = User.query.get(data["id"])
         return user
