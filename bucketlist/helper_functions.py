@@ -26,7 +26,7 @@ bucketlist_serializer = {"id": fields.Integer,
                          "date_modified": fields.DateTime}
 
 
-@app.before_request
+# @app.before_request
 def before_request():
     """Set global attributes."""
     if request.endpoint not in ["userlogin", "userregister", "home"]:
