@@ -82,6 +82,7 @@ class CreateBucketList(Resource):
             return {"message": "ERROR! Title and/or"
                     " Description can not be empty"}, 400
 
+
 class GetAllBucketLists(Resource):
     """Shows all bucketlists. Route: /api/v1/auth/bucketlists/ using GET."""
 
