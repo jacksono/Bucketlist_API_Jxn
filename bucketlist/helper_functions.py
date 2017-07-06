@@ -50,7 +50,7 @@ def before_request():
                 return jsonify({"message": "Error: Please enter a token"}), 401
         else:
             return jsonify({"message": "Error: Wrong URL or Incorrect request"
-                            " METHOD. Please check and try again"}), 400
+                            " METHOD. Please check and try again"}), 404
 
 
 def add_user(user_object):
