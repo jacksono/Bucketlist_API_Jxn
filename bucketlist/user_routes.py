@@ -9,7 +9,14 @@ class Home(Resource):
     """Response to the index route using the GET method."""
 
     def get(self):
-        """Content displayed when index route is accessed."""
+        """Define the home/index url.
+
+        ---
+           responses:
+             200:
+               description: The index url
+
+        """
         return {"message": "This is the Bucketlist API, You are WELCOME!!. "
                 "To use the API please register or login"}
 
@@ -18,7 +25,14 @@ class UserRegister(Resource):
     """Register a new user to the route /api/v1/auth/register using POST."""
 
     def post(self):
-        """Register a user."""
+        """Create a new user.
+
+        ---
+           responses:
+             201:
+               description: Creates a new user
+
+        """
         parser = reqparse.RequestParser()
         parser.add_argument(
             "username",
@@ -55,7 +69,14 @@ class UserLogin(Resource):
     """Log in a user to the route /api/v1/auth/login using POST."""
 
     def post(self):
-        """Parse data through the header."""
+        """Login a user.
+
+        ---
+           responses:
+             200:
+               description: Logs in a user
+
+        """
         parser = reqparse.RequestParser()
         parser.add_argument(
             "email",

@@ -61,7 +61,14 @@ class CreateBucketList(Resource):
     """Create a new bucketlist to the route /api/v1/auth/bucketlists/ using POST.""" # noqa
 
     def post(self):
-        """Create a bucketlist."""
+        """Create a new bucketlist.
+
+        ---
+           responses:
+             201:
+               description: Creates a new bucketlist
+
+        """
         parser = reqparse.RequestParser()
         parser.add_argument(
             "title",
@@ -87,9 +94,13 @@ class GetAllBucketLists(Resource):
     """Shows all bucketlists. Route: /api/v1/auth/bucketlists/ using GET."""
 
     def get(self):
-        """Show all bucketlists and implements pagination and searching by name.
+        """Show all bucketlists.
 
-        Route: /api/v1/auth/bucketlists/ using GET.
+        ---
+           responses:
+             200:
+               description: Shows all bucketlists
+
         """
         args = request.args.to_dict()
         page = int(args.get("page", 1))
@@ -136,7 +147,14 @@ class GetSingleBucketList(Resource):
     """Get a single bucketlist. Route /bucketlist/<id>."""
 
     def get(self, id):
-        """Get a single bucketlist. Route /bucketlist/<id>/."""
+        """Show one bucketlist.
+
+        ---
+           responses:
+             200:
+               description: Shows one bucketlist
+
+        """
         if get_bucketlist_by_id(id):
             return get_one_bucketlist(id)
         else:
@@ -147,7 +165,14 @@ class UpdateBucketList(Resource):
     """Update a bucket list: Route: PUT /bucketlists/<id>."""
 
     def put(self, id):
-        """Update bucketlist."""
+        """Update one bucketlist.
+
+        ---
+           responses:
+             200:
+               description: Updates one bucketlist
+
+        """
         if not get_bucketlist_by_id(id):
             return {"message": "ERROR! Cannot update a"
                     " bucketlsit that doesnot exist"}, 404
@@ -190,7 +215,14 @@ class DeleteBucketList(Resource):
     """Delete a single bucketlist. Route: DELETE /bucketlists/<id>."""
 
     def delete(self, id):
-        """Delete a bucketlist."""
+        """Delete one bucketlist.
+
+        ---
+           responses:
+             200:
+               description: Deletes one bucketlist
+
+        """
         bucketlist = get_bucketlist_by_id(id)
         if bucketlist:
             items = Item.query.filter_by(bucketlist_id=id).all()

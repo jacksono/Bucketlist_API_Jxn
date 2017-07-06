@@ -26,7 +26,14 @@ class CreateItem(Resource):
     """Create a new bucketlist item. Route: /bucketlists/<id>/items/."""
 
     def post(self, id):
-        """Create a new bucketlist item."""
+        """Create a new bucketlist item.
+
+        ---
+           responses:
+             201:
+               description: Creates a new bucketlist item
+
+        """
         parser = reqparse.RequestParser()
         parser.add_argument(
             "name",
@@ -57,7 +64,14 @@ class DeleteItem(Resource):
     """Delete bucketlist item. Route: /bucketlists/<id>/items/<item_id>."""
 
     def delete(self, id, item_id):
-        """Delete bucketlist item."""
+        """Delete one bucketlist item.
+
+        ---
+           responses:
+             200:
+               description: Deletes one bucketlist item
+
+        """
         if get_bucketlist_by_id(id):
             bucketlist_id = get_bucketlist_by_id(id).id
         else:
@@ -80,7 +94,14 @@ class UpdateItem(Resource):
     """Update a bucketlist item.Route: /bucketlists/<id>/items/<item_id>."""
 
     def put(self, id, item_id):
-        """Update a bucketlist item."""
+        """Update one bucketlist item.
+
+        ---
+           responses:
+             200:
+               description: Update one bucketlist item
+
+        """
         if get_bucketlist_by_id(id):
             bucketlist_id = get_bucketlist_by_id(id).id
         else:
