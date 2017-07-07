@@ -8,6 +8,16 @@ from bucketlist.models import User
 class TestUser(BaseTest):
     """Create test cases for users functionality."""
 
+    def get_token(self):
+        """Return authentication token."""
+        self.user = {"email": "user@bucketlist.com",
+                     "password": "password"}
+        r = self.app.post("/api/v1/auth/login",
+                          data=self.user)
+        output = json.loads(r.data.decode())
+        token = output.get("token")
+        return {"token": token}
+
     def test_user_can_register(self):
         """Tests if a new user can be registered."""
         self.user = {"username": "user1", "email": "user1@bucketlist.com",
@@ -132,3 +142,21 @@ class TestUser(BaseTest):
         message = json.loads(r.data.decode())
         self.assertIn("That email is not yet registered",
                       message["message"])
+
+    def test_user_can_change_username(self):
+        """Tests if a registered user can change their username."""
+        self.user = {"username": "user1"}
+        r = self.app.put("/api/v1/auth/name", data=self.user,
+                         headers=self.get_token())
+        self.assertEqual(r.status_code, 200)
+        message = json.loads(r.data.decode())
+        self.assertIn("Username changed", message["message"])
+
+    def test_user_cannot_change_to_the_current_username(self):
+        """Tests if a registered user can change their username."""
+        self.user = {"username": "user"}
+        r = self.app.put("/api/v1/auth/name", data=self.user,
+                         headers=self.get_token())
+        self.assertEqual(r.status_code, 400)
+        message = json.loads(r.data.decode())
+        self.assertIn("Use a new username", message["message"])
