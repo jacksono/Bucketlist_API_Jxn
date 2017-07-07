@@ -109,6 +109,25 @@ class TestBucketlist(BaseTest):
         self.assertTrue(Bucketlist.query.filter_by(title="Move").first())
         self.assertFalse(Bucketlist.query.filter_by(title="Travel").first())
 
+    def test_user_cannot_update_a_non_existant_bucketlist(self):
+        """Tests that a user cannot delete a bucket list that doesnot exist."""
+        r = self.app.put("/api/v1/bucketlists/2",
+                         headers=self.get_token())
+        self.assertEqual(r.status_code, 404)
+        message = json.loads(r.data.decode())
+        self.assertIn("Cannot update", message["message"])
+
+    def test_user_cannot_update_with_same_title(self):
+        """Tests that a user cannot update with same title."""
+        self.bucketlist = {"title": "Travel",
+                           "description": "Move around the world",
+                           "created_by": 1}
+        r = self.app.put("/api/v1/bucketlists/1",
+                         headers=self.get_token(), data=self.bucketlist)
+        self.assertEqual(r.status_code, 400)
+        message = json.loads(r.data.decode())
+        self.assertIn("use a new Title", message["message"])
+
     def test_user_can_delete_a_bucketlist(self):
         """Tests that a user can delete a bucketlist."""
         r = self.app.delete("/api/v1/bucketlists/1",
@@ -132,7 +151,7 @@ class TestBucketlist(BaseTest):
         message = json.loads(r.data.decode())
         self.assertIn("Travel", message["Bucketlists"][0]["name"])
 
-    def test_pagination_option_works(self):
+    def test_pagination_option_shows_next_page(self):
         """Tests that a bucketlists are paginated."""
         self.bucketlist = {"title": "Love",
                            "description": "I want to marry a princess",
@@ -145,6 +164,18 @@ class TestBucketlist(BaseTest):
         message = json.loads(r.data.decode())
         self.assertEqual("http://localhost/api/v1/bucketlists?limit=1&page=2",
                          message['Next Page'])
+
+    def test_pagination_option_shows_previous_page(self):
+        """Tests that a bucketlists are paginated."""
+        self.bucketlist = {"title": "Love",
+                           "description": "I want to marry a princess",
+                           "created_by": 1}
+        self.app.get("/api/v1/bucketlists/?limit=1",
+                     headers=self.get_token())
+        r = self.app.get("/api/v1/bucketlists?limit=1&page=2",
+                         headers=self.get_token())
+        self.assertEqual(r.status_code, 301)
+
 
     def test_get_bucketlist_by_id_returns_none(self):
         """Tests if helper function returns none if bucketlist doesnt exist."""

@@ -193,7 +193,7 @@ class UpdateBucketList(Resource):
         if bucketlist.title == title or\
            bucketlist.description == description:
             return {"message": "ERROR: Please use a new Title"
-                    " and Description"}
+                    " and Description"}, 400
 
         else:
             bucketlist.title = title
