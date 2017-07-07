@@ -6,7 +6,7 @@ install:
   - pip install coveralls
   - pip install -r requirements.txt
 env:
-  -
+  - export SECRET_KEY=\xcd\xefg\xb3\x08\x88\xdc1\xab\x96\x1cE\t\xd4\x17
 # command to run tests
 script:
   - nosetests --with-coverage
