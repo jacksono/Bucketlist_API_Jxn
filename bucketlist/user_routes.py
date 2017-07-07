@@ -1,8 +1,10 @@
 """Module to define endpoint contents."""
-from flask_restful import Resource, reqparse
-from bucketlist.models import User
-from bucketlist.helper_functions import add_user
+from flask_restful import Resource, reqparse, marshal
+from flask import g
 from validate_email import validate_email
+from bucketlist.models import User
+from bucketlist.app import db
+from bucketlist.helper_functions import add_user, user_serializer
 
 
 class Home(Resource):
@@ -100,3 +102,34 @@ class UserLogin(Resource):
                         " Please check and try again! "}, 400
         else:
             return {"message": "Error: That email is not yet registered."}, 404
+
+
+class ChangeUsername(Resource):
+    """Change user's name: Route: PUT /auth/name."""
+
+    def put(self):
+        """Change a user's name.
+
+        ---
+           responses:
+             200:
+               description: Changes a user's name
+
+        """
+        parser = reqparse.RequestParser()
+        parser.add_argument(
+            "username",
+            required=True,
+            help="Please enter a new username.")
+        args = parser.parse_args()
+        username = args["username"]
+        user = User.query.filter_by(email=g.user.email).first()
+        if user.username == username:
+            return {"message": "Error! Use a new username"}, 400
+        user.username = username
+        db.session.add(user)
+        db.session.commit()
+
+        message = {"message": "Username changed succesfully"}
+        message.update(marshal(user, user_serializer))
+        return message
