@@ -103,11 +103,14 @@ class GetAllBucketLists(Resource):
         """
         args = request.args.to_dict()
         page = int(args.get("page", 1))
-        limit = args.get("limit", 20)
+        try:
+            int(args.get("limit"))
+        except:
+            return {"message": "Error! Limit must be an integer"}
+        limit = int(args.get("limit", 20))
+        if limit < 1:
+            return {"message": "Error! Limit must be greater than 0"}
         search_by_name = args.get("q")
-        if not limit.isdigit() or int(limit) < 1:
-            return {"message": "Error! Limit must be a positive integer"}, 400
-        limit = int(limit)
         output = {}
         if search_by_name:
             results = Bucketlist.query.filter(func.lower(
