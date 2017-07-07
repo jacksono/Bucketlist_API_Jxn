@@ -36,7 +36,8 @@ def before_request():
                             "getallbucketlists",
                             "getsinglebucketlist",
                             "updatebucketlist",
-                            "deletebucketlist"]:
+                            "deletebucketlist",
+                            "getallitems"]:
         token = request.headers.get("token")
         if token is not None:
             user = User.verify_auth_token(token)

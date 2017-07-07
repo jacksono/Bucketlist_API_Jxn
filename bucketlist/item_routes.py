@@ -149,3 +149,38 @@ class UpdateItem(Resource):
                 return {"message": "Item does not exist inthe bucketlist"}, 404
         else:
             return {"message": "That bucketlist has no items"}, 404
+
+
+class GetAllItems(Resource):
+    """Shhow all bucketlist items.Route: /bucketlists/<id>/items/."""
+
+    def get(self, id):
+        """Get all bucketlist items.
+
+        ---
+           responses:
+             200:
+               description: Gets all bucketlist items
+
+        """
+        if get_bucketlist_by_id(id):
+            bucketlist_id = get_bucketlist_by_id(id).id
+        else:
+            return {"message": "That bucketlist does not exist"}, 404
+        items = Item.query.filter_by(bucketlist_id=bucketlist_id).all()
+        items_dict = {}
+        items_list = []
+        if items:
+            item_id = 1
+            for item in items:
+                items_dict["id"] = item_id
+                items_dict["name"] = item.name
+                items_dict["date_modified"] = str(item.date_modified)
+                items_dict["date_created"] = str(item.date_created)
+                items_dict["done"] = str(item.done)
+                items_list.append(items_dict)
+                items_dict = {}
+                item_id += 1
+            return {"items": items_list}
+        else:
+            return {"message": "No items yet"}
