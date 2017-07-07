@@ -3,6 +3,7 @@
 from tests.base_test import BaseTest
 import json
 from bucketlist.models import Bucketlist
+from bucketlist.bucketlist_routes import get_bucketlist_by_id
 
 
 class TestBucketlist(BaseTest):
@@ -41,6 +42,18 @@ class TestBucketlist(BaseTest):
         message = json.loads(r.data.decode())
         self.assertIn("already exists", message["message"])
 
+    def test_error_when_title_description_not_filled(self):
+        """Test error when title or descriptionnot filled."""
+        self.bucketlist = {"title": "",
+                           "description": "",
+                           "created_by": 1}
+        r = self.app.post("/api/v1/bucketlists/", data=self.bucketlist,
+                          headers=self.get_token())
+        message = json.loads(r.data.decode())
+        self.assertEqual(r.status_code, 400)
+        self.assertIn("Title and/or Description can not be empty",
+                      message["message"])
+
     def test_user_can_see_all_bucket_lists(self):
         """Test that a user can see all bucketlists."""
         r = self.app.get("/api/v1/bucketlists/", headers=self.get_token())
@@ -60,12 +73,30 @@ class TestBucketlist(BaseTest):
 
     def test_can_get_single_bucket_list(self):
         """Tests that a single bucket list can be displayed."""
+        self.bucketlist = {"title": "Love",
+                           "description": "I want to marry a princess",
+                           "created_by": 1}
+        self.app.post("/api/v1/bucketlists/", data=self.bucketlist,
+                      headers=self.get_token())
         r = self.app.get("/api/v1/bucketlists/1",
                          headers=self.get_token())
+        r2 = self.app.get("/api/v1/bucketlists/2",
+                          headers=self.get_token())
         self.assertEqual(r.status_code, 200)
+        self.assertEqual(r2.status_code, 200)
         message = json.loads(r.data.decode())
+        message2 = json.loads(r2.data.decode())
         self.assertIn("Travel", message["name"])
-        self.assertEqual(1, len(Bucketlist.query.all()))
+        self.assertIn("No items yet", message2["items"][0]["message"])
+        self.assertEqual(2, len(Bucketlist.query.all()))
+
+    def test_cannot_get_single_bucket_list_if_it_doesnot_exist(self):
+        """Tests cannot get a non existant bucketlist."""
+        r = self.app.get("/api/v1/bucketlists/2",
+                         headers=self.get_token())
+        message = json.loads(r.data.decode())
+        self.assertEqual(r.status_code, 404)
+        self.assertIn("does not exist", message["message"])
 
     def test_user_can_update_a_bucketlist(self):
         """Tests if a user can update a bucketlist."""
@@ -114,3 +145,10 @@ class TestBucketlist(BaseTest):
         message = json.loads(r.data.decode())
         self.assertEqual("http://localhost/api/v1/bucketlists?limit=1&page=2",
                          message['Next Page'])
+
+    def test_get_bucketlist_by_id_returns_none(self):
+        """Tests if helper function returns none if bucketlist doesnt exist."""
+        self.app.delete("/api/v1/bucketlists/1",
+                        headers=self.get_token())
+        self.assertEqual(get_bucketlist_by_id(1),
+                         None)

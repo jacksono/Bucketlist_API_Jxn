@@ -61,7 +61,7 @@ class TestItem(BaseTest):
     def test_user_cannot_update_a_bucketlist_item_with_the_old_name(self):
         """Tests that a user can update an existing bucketlist item."""
         self.item = {"name": "Enjoy the beautiful beaches of Hawaii",
-                     "bucketlist_id": 1, "done": "y"}
+                     "bucketlist_id": 1, "done": "n"}
         r = self.app.put("/api/v1/bucketlists/1/items/1", data=self.item,
                          headers=self.get_token())
         message = json.loads(r.data.decode())

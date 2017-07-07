@@ -54,8 +54,6 @@ def get_one_bucketlist(id):
         message["date_modified"] = str(bucketlist.date_modified)
         message["created_by"] = bucketlist.created_by
         return message
-    else:
-        return {"message": "ERROR!, No bucketlists matching that request"}, 404
 
 
 class CreateBucketList(Resource):
