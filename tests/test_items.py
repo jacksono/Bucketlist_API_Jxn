@@ -20,13 +20,23 @@ class TestItem(BaseTest):
 
     def test_can_add_new_item(self):
         """Tests if a user can add a new item in a bucketlist."""
-        self.item = {"name": "Go to Hawaii", "done": "y",
+        self.item = {"name": "Go to Hawaii", "done": "n",
                      "buckeltist_id": 1}
         r = self.app.post("/api/v1/bucketlists/1/items/", data=self.item,
                           headers=self.get_token())
         self.assertEqual(r.status_code, 201)
         message = json.loads(r.data.decode())
         self.assertIn("created successfully", message["message"])
+
+    def test_error_when_missing_name_or_status(self):
+        """Tests for error message when the name or status is missing."""
+        self.item = {"name": "", "done": "",
+                     "buckeltist_id": 1}
+        r = self.app.post("/api/v1/bucketlists/1/items/", data=self.item,
+                          headers=self.get_token())
+        self.assertEqual(r.status_code, 400)
+        message = json.loads(r.data.decode())
+        self.assertIn("Name and/or Status can not be empty", message["message"])
 
     def test_shows_message_when_item_already_exists(self):
         """Tests that a message is shown when an item already exists."""
@@ -48,7 +58,17 @@ class TestItem(BaseTest):
         self.assertFalse(Item.query.filter_by(
             name="Enjoy the beautiful beaches of Hawaii").first())
 
-    def test_message_when_user_updates_to__name_that_already_exists(self):
+    def test_user_cannot_update_a_bucketlist_item_with_the_old_name(self):
+        """Tests that a user can update an existing bucketlist item."""
+        self.item = {"name": "Enjoy the beautiful beaches of Hawaii",
+                     "bucketlist_id": 1, "done": "y"}
+        r = self.app.put("/api/v1/bucketlists/1/items/1", data=self.item,
+                         headers=self.get_token())
+        message = json.loads(r.data.decode())
+        self.assertEqual(r.status_code, 200)
+        self.assertIn("Use a new name", message["message"])
+
+    def test_message_when_user_updates_to_name_that_already_exists(self):
         """Tests for an error message.
 
         shown when a user tries to update to a item name which already exists.
@@ -68,12 +88,17 @@ class TestItem(BaseTest):
     def test_message_when_user_updates_an_item_that_doesnot_exists(self):
         """Tests for an error message shown when a user tries to update an item which doesnot exist.""" # noqa
         self.item = {"name": "Enjoy the beautiful beaches of Hawaii",
-                     "bucketlist_id": 1, "done": "True"}
+                     "bucketlist_id": 1, "done": "n"}
         r = self.app.put("/api/v1/bucketlists/1/items/2", data=self.item,
                          headers=self.get_token())
+        r2 = self.app.put("/api/v1/bucketlists/2/items/1", data=self.item,
+                          headers=self.get_token())
         message = json.loads(r.data.decode())
+        message2 = json.loads(r2.data.decode())
         self.assertEqual(r.status_code, 404)
+        self.assertEqual(r2.status_code, 404)
         self.assertIn("does not exist", message["message"])
+        self.assertIn("does not exist", message2["message"])
 
     def test_message_when_user_updates_a_bucketlist_that_has_no_items(self):
         """Tests for an error message when a user tries to update a bucketlist which has no items.""" # noqa
@@ -99,12 +124,45 @@ class TestItem(BaseTest):
         self.assertIn("deleted succesfully", message["message"])
         self.assertFalse(Item.query.all())
 
-    def test_item_done_field_accepts_Y_or_N_only(self):
-        """Tests that the item done field accpets Y/y and N/n only."""
+    def test_user_cannot_delete_a_nonexisting_bucketlist_item(self):
+        """Tests that a user can delete an existing bucketlist item."""
+        self.bucketlist = {"title": "Love",
+                           "description": "I want to marry a princess",
+                           "created_by": 1}
+        self.app.post("/api/v1/bucketlists/", data=self.bucketlist,
+                      headers=self.get_token())
+        r1 = self.app.delete("/api/v1/bucketlists/1/items/2",
+                             headers=self.get_token())
+        r2 = self.app.delete("/api/v1/bucketlists/2/items/1",
+                             headers=self.get_token())
+        r3 = self.app.delete("/api/v1/bucketlists/3/items/1",
+                             headers=self.get_token())
+        message1 = json.loads(r1.data.decode())
+        message2 = json.loads(r2.data.decode())
+        message3 = json.loads(r3.data.decode())
+        self.assertEqual(r1.status_code, 404)
+        self.assertEqual(r2.status_code, 404)
+        self.assertEqual(r3.status_code, 404)
+        self.assertIn("item doesnot exist", message1["message"])
+        self.assertIn("does not  have any items", message2["message"])
+        self.assertIn("Bucketlist does not exist", message3["message"])
+
+    def test_item_done_field_accepts_Y_or_N_only_in_post(self):
+        """Tests that the item done field accpets Y/y and N/n only in post."""
         self.item = {"name": "Go to Hawaii", "done": "True",
                      "buckeltist_id": 1}
         r = self.app.post("/api/v1/bucketlists/1/items/", data=self.item,
                           headers=self.get_token())
+        self.assertEqual(r.status_code, 200)
+        message = json.loads(r.data.decode())
+        self.assertIn("use Y/N or y/n", message["message"])
+
+    def test_item_done_field_accepts_Y_or_N_only_in_put(self):
+        """Tests that the item done field accpets Y/y and N/n only in put."""
+        self.item = {"name": "Go to Hawaii", "done": "True",
+                     "buckeltist_id": 1}
+        r = self.app.put("/api/v1/bucketlists/1/items/1", data=self.item,
+                         headers=self.get_token())
         self.assertEqual(r.status_code, 200)
         message = json.loads(r.data.decode())
         self.assertIn("use Y/N or y/n", message["message"])
