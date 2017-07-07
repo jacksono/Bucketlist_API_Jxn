@@ -107,3 +107,29 @@ class TestItem(BaseTest):
         self.assertEqual(r.status_code, 200)
         message = json.loads(r.data.decode())
         self.assertIn("use Y/N or y/n", message["message"])
+
+    def test_user_can_get_all_bucketlist_items(self):
+        """Tests that a user can get a list of all bucketlist items."""
+        r = self.app.get("/api/v1/bucketlists/1/items/",
+                         headers=self.get_token())
+        message = json.loads(r.data.decode())
+        self.assertEqual(r.status_code, 200)
+        self.assertIn("Enjoy the beautiful", message["items"][0]["name"])
+
+    def test_message_when_there_are_no_bucketlist_items(self):
+        """Tests message shown when there are no items."""
+        self.app.delete("/api/v1/bucketlists/1/items/1",
+                        headers=self.get_token())
+        r = self.app.get("/api/v1/bucketlists/1/items/",
+                         headers=self.get_token())
+        message = json.loads(r.data.decode())
+        self.assertEqual(r.status_code, 200)
+        self.assertIn("No items", message["message"])
+
+    def test_message_when_the_bucketlist_doesnt_exist(self):
+        """Tests message shown when the bucketlist doesnot exist."""
+        r = self.app.get("/api/v1/bucketlists/2/items/",
+                         headers=self.get_token())
+        message = json.loads(r.data.decode())
+        self.assertEqual(r.status_code, 404)
+        self.assertIn("does not exist", message["message"])
