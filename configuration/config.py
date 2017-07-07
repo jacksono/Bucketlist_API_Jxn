@@ -22,7 +22,8 @@ class DevelopmentConfig(Config):
     SQLALCHEMY_DATABASE_URI = "sqlite:///" + \
         os.path.join(basedir, "bucketlist.db")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SECRET_KEY = '\xcd\xefg\xb3\x08\x88\xdc1\xab\x96\x1cE\t\xd4\x17'
+    SECRET_KEY = os.environ['SECRET_KEY']
+    # \xcd\xefg\xb3\x08\x88\xdc1\xab\x96\x1cE\t\xd4\x17'
 
 
 class TestingConfig(Config):
@@ -33,7 +34,7 @@ class TestingConfig(Config):
     SQLALCHEMY_DATABASE_URI = "sqlite:///" + \
         os.path.join(basedir, "test.db")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SECRET_KEY = '\xcd\xefg\xb3\x08\x88\xdc1\xab\x96\x1cE\t\xd4\x17'
+    SECRET_KEY = os.environ['SECRET_KEY']
 
 
 class ProductionConfig(Config):

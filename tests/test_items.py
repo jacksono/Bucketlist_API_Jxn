@@ -147,7 +147,7 @@ class TestItem(BaseTest):
         self.assertIn("does not  have any items", message2["message"])
         self.assertIn("Bucketlist does not exist", message3["message"])
 
-    def test_item_done_field_accepts_Y_or_N_only_in_post(self):
+    def test_item_done_field_accepts_y_or_n_only_in_post(self):
         """Tests that the item done field accpets Y/y and N/n only in post."""
         self.item = {"name": "Go to Hawaii", "done": "True",
                      "buckeltist_id": 1}
@@ -157,7 +157,7 @@ class TestItem(BaseTest):
         message = json.loads(r.data.decode())
         self.assertIn("use Y/N or y/n", message["message"])
 
-    def test_item_done_field_accepts_Y_or_N_only_in_put(self):
+    def test_item_done_field_accepts_y_or_n_only_in_put(self):
         """Tests that the item done field accpets Y/y and N/n only in put."""
         self.item = {"name": "Go to Hawaii", "done": "True",
                      "buckeltist_id": 1}

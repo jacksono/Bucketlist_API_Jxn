@@ -130,7 +130,7 @@ class GetAllBucketLists(Resource):
         list_of_bucketlists = []
         bucketlists = bucketlists.items
         if bucketlists:
-            for number in range(len(bucketlists)):
+            for number, _ in enumerate(bucketlists):
                 list_of_bucketlists.append(get_one_bucketlist(number + 1))
             output.update({"Bucketlists": list_of_bucketlists,
                            "Current Page": page,

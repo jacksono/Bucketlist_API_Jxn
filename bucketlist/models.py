@@ -52,7 +52,7 @@ class User(db.Model):
 
     def __repr__(self):
         """Enable printing of the user's username."""
-        return "<User: %r>" % self.username
+        return "<User: {}>".format(self.username)
 
 
 class Bucketlist(db.Model):
@@ -71,7 +71,7 @@ class Bucketlist(db.Model):
 
     def __repr__(self):
         """Enable printing of the Bucketlist title ."""
-        return "<Bucketlist: %r>" % self.title
+        return "<Bucketlist: {}>".format(self.title)
 
 
 class Item(db.Model):
@@ -90,4 +90,4 @@ class Item(db.Model):
 
     def __repr__(self):
         """Enable printing of the Bucketlist Item name ."""
-        return "<Item: %r>" % self.name
+        return "<Item: {}>".format(self.name)
