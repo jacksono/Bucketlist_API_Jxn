@@ -52,9 +52,13 @@ class CreateItem(Resource):
                 done = False
             else:
                 return {'message': "Please use Y/N or y/n for status"}
-            bucketlist_id = get_bucketlist_by_id(id).id
-            item = Item(name=name, done=done, bucketlist_id=bucketlist_id)
-            return add_item(item, bucketlist_id, id)
+            bucketlist = get_bucketlist_by_id(id)
+            if bucketlist:
+                bucketlist_id = bucketlist.id
+                item = Item(name=name, done=done, bucketlist_id=bucketlist_id)
+                return add_item(item, bucketlist_id, id)
+            else:
+                return {"message": "ERROR! That bucketlist doesnt exist"}, 404
         else:
             return {"message": "ERROR! Name and/or"
                     " Status can not be empty"}, 400
