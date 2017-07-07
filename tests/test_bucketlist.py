@@ -176,7 +176,6 @@ class TestBucketlist(BaseTest):
                          headers=self.get_token())
         self.assertEqual(r.status_code, 301)
 
-
     def test_get_bucketlist_by_id_returns_none(self):
         """Tests if helper function returns none if bucketlist doesnt exist."""
         self.app.delete("/api/v1/bucketlists/1",
