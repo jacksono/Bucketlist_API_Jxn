@@ -206,7 +206,7 @@ class UpdateBucketList(Resource):
             """Show when the the title already exists"""
             db.session.rollback()
             return {"message": "Error: Bucketlist with title " + title +
-                    " already exists."}
+                    " already exists."}, 400
         message = {"message": "Bucket list updated succesfully"}
         bucketlist.id = id
         message.update(marshal(bucketlist, bucketlist_serializer))

@@ -128,6 +128,22 @@ class TestBucketlist(BaseTest):
         message = json.loads(r.data.decode())
         self.assertIn("use a new Title", message["message"])
 
+    def test_user_cannot_update_with_to_an_existing_title(self):
+        """Tests that a user cannot update with same title."""
+        self.bucketlist = {"title": "Love",
+                           "description": "I want to marry a princess",
+                           "created_by": 1}
+        self.app.post("/api/v1/bucketlists/", data=self.bucketlist,
+                      headers=self.get_token())
+        self.bucketlist = {"title": "Travel",
+                           "description": "Move around the world",
+                           "created_by": 1}
+        r = self.app.put("/api/v1/bucketlists/2",
+                         headers=self.get_token(), data=self.bucketlist)
+        self.assertEqual(r.status_code, 400)
+        message = json.loads(r.data.decode())
+        self.assertIn("already exists", message["message"])
+
     def test_user_can_delete_a_bucketlist(self):
         """Tests that a user can delete a bucketlist."""
         r = self.app.delete("/api/v1/bucketlists/1",
