@@ -2,6 +2,7 @@
 from tests.base_test import BaseTest
 import json
 from bucketlist.models import Item
+from bucketlist.item_routes import get_item_by_id
 
 
 class TestItem(BaseTest):
@@ -133,3 +134,15 @@ class TestItem(BaseTest):
         message = json.loads(r.data.decode())
         self.assertEqual(r.status_code, 404)
         self.assertIn("does not exist", message["message"])
+
+    def test_get_item_by_id_works(self):
+        """Tests if helper function works."""
+        self.assertEqual(get_item_by_id(1, 1).name,
+                         "Enjoy the beautiful beaches of Hawaii")
+
+    def test_get_item_by_id_returns_none(self):
+        """Tests if helper function returns none if item doesnt exist."""
+        self.assertEqual(get_item_by_id(1, 2),
+                         None)
+        self.assertEqual(get_item_by_id(2, 1),
+                         None)
