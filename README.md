@@ -4,7 +4,7 @@
 ![alt text](https://img.shields.io/badge/python-3.4-blue.svg)
 [![DUB](https://img.shields.io/dub/l/vibe-d.svg)]()
 [![pep 8](https://img.shields.io/badge/code%20style-Pep%208-green.svg)](https://www.python.org/dev/peps/pep-0008/)
-[![Swagger Validator](https://img.shields.io/swagger/valid/2.0/https/bitbucket.org/api/swagger.json.svg)]()
+[![Swagger Validator](https://img.shields.io/swagger/valid/2.0/https/bitbucket.org/api/swagger.json.svg)](http://brunorocha.org/python/flask/flasgger-api-playground-with-flask-and-swagger-ui.html)
 
 
 # Bucketlist_API_Jxn
