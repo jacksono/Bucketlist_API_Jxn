@@ -46,6 +46,9 @@ class TestRoutes(TestCase):
             output1 = json.loads(r1.data.decode())
             output2 = json.loads(r2.data.decode())
             output3 = json.loads(r3.data.decode())
+            self.assertEqual(r1.status_code, 405)
+            self.assertEqual(r2.status_code, 405)
+            self.assertEqual(r3.status_code, 405)
             self.assertEqual(output1,
                              {"message": "The method is not allowed"
                               " for the requested URL."})
@@ -64,6 +67,9 @@ class TestRoutes(TestCase):
             output1 = json.loads(r1.data.decode())
             output2 = json.loads(r2.data.decode())
             output3 = json.loads(r3.data.decode())
+            self.assertEqual(r1.status_code, 401)
+            self.assertEqual(r2.status_code, 401)
+            self.assertEqual(r3.status_code, 401)
             self.assertEqual(output1,
                              {"message": "Error: Please enter a token"})
             self.assertEqual(output2,
@@ -73,8 +79,9 @@ class TestRoutes(TestCase):
 
     def test_error_message_shown_for_an_invalid_token(self):
             """Tests for an error message  when an invalid token is used."""
-            r1 = self.app.get("/api/v1/bucketlists/",
-                              headers={"token": "token"})
-            output1 = json.loads(r1.data.decode())
+            r = self.app.get("/api/v1/bucketlists/",
+                             headers={"token": "token"})
+            output1 = json.loads(r.data.decode())
+            self.assertEqual(r.status_code, 401)
             self.assertEqual(output1,
                              {"message": "Error: Invalid Token"})

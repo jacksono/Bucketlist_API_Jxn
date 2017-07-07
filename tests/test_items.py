@@ -33,6 +33,7 @@ class TestItem(BaseTest):
                      "done": "Y", "buckeltist_id": 1}
         r = self.app.post("/api/v1/bucketlists/1/items/", data=self.item,
                           headers=self.get_token())
+        self.assertEqual(r.status_code, 400)
         message = json.loads(r.data.decode())
         self.assertIn("already exists", message["message"])
 
@@ -59,6 +60,7 @@ class TestItem(BaseTest):
                       "bucketlist_id": 1, "done": "y"}
         r = self.app.put("/api/v1/bucketlists/1/items/2", data=self.item2,
                          headers=self.get_token())
+        self.assertEqual(r.status_code, 400)
         message = json.loads(r.data.decode())
         self.assertIn("already exists", message["message"])
 
@@ -69,6 +71,7 @@ class TestItem(BaseTest):
         r = self.app.put("/api/v1/bucketlists/1/items/2", data=self.item,
                          headers=self.get_token())
         message = json.loads(r.data.decode())
+        self.assertEqual(r.status_code, 404)
         self.assertIn("does not exist", message["message"])
 
     def test_message_when_user_updates_a_bucketlist_that_has_no_items(self):
@@ -82,6 +85,7 @@ class TestItem(BaseTest):
                      "bucketlist_id": 1, "done": "True"}
         r = self.app.put("/api/v1/bucketlists/2/items/1", data=self.item,
                          headers=self.get_token())
+        self.assertEqual(r.status_code, 404)
         message = json.loads(r.data.decode())
         self.assertIn("has no items", message["message"])
 
@@ -90,6 +94,7 @@ class TestItem(BaseTest):
         r = self.app.delete("/api/v1/bucketlists/1/items/1",
                             headers=self.get_token())
         message = json.loads(r.data.decode())
+        self.assertEqual(r.status_code, 200)
         self.assertIn("deleted succesfully", message["message"])
         self.assertFalse(Item.query.all())
 
