@@ -113,11 +113,13 @@ class GetAllBucketLists(Resource):
         search_by_name = args.get("q")
         output = {}
         if search_by_name:
-            # results = Bucketlist.query.filter(
-            #     Bucketlist.title.ilike("%" + search_by_name + "%"))
-            results = Bucketlist.query.filter(func.lower(
+            bucketlists = Bucketlist.query.filter_by(
+                created_by=g.user.id)
+            for num, bucket in enumerate(bucketlists):
+                bucket.user_num = num + 1
+            results = bucketlists.filter(func.lower(
                 Bucketlist.title).contains(search_by_name.lower()))
-            bucketlists = results.filter_by(
+            bucketlist_pages = results.filter_by(
                 created_by=g.user.id).paginate(
                 page=page, per_page=limit, error_out=False)
         else:
@@ -151,7 +153,6 @@ class GetAllBucketLists(Resource):
                     for item in items:
                         items_dict["id"] = item_id
                         items_dict["name"] = item.name
-                        items_dict["date_modified"] = str(item.date_modified)
                         items_dict["date_created"] = str(item.date_created)
                         items_dict["done"] = str(item.done)
                         items_list.append(items_dict)
@@ -164,7 +165,6 @@ class GetAllBucketLists(Resource):
                 result["description"] = bucketlist.description
                 result["items"] = items_list
                 result["date_created"] = str(bucketlist.date_created)
-                result["date_modified"] = str(bucketlist.date_modified)
                 result["created_by"] = bucketlist.created_by
                 list_of_bucketlists.append(result)
             output.update({"Bucketlists": list_of_bucketlists,
