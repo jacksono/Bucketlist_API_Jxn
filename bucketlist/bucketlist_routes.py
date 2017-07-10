@@ -113,6 +113,8 @@ class GetAllBucketLists(Resource):
         search_by_name = args.get("q")
         output = {}
         if search_by_name:
+            # results = Bucketlist.query.filter(
+            #     Bucketlist.title.ilike("%" + search_by_name + "%"))
             results = Bucketlist.query.filter(func.lower(
                 Bucketlist.title).contains(search_by_name.lower()))
             bucketlists = results.filter_by(
@@ -120,11 +122,14 @@ class GetAllBucketLists(Resource):
                 page=page, per_page=limit, error_out=False)
         else:
             bucketlists = Bucketlist.query.filter_by(
-                created_by=g.user.id).paginate(
+                created_by=g.user.id)
+            for num, bucket in enumerate(bucketlists):
+                bucket.user_num = num + 1
+            bucketlist_pages = bucketlists.paginate(
                 page=page, per_page=limit, error_out=False)
-        no_of_pages = bucketlists.pages
-        has_next = bucketlists.has_next
-        has_previous = bucketlists.has_prev
+        no_of_pages = bucketlist_pages.pages
+        has_next = bucketlist_pages.has_next
+        has_previous = bucketlist_pages.has_prev
         if has_next:
             next_page = (str(request.url_root) + "api/v1/bucketlists?" +
                          "limit=" + str(limit) + "&page=" + str(page + 1))
@@ -134,10 +139,34 @@ class GetAllBucketLists(Resource):
                              "limit=" + str(limit) + "&page=" + str(page - 1))
             output['Previous Page'] = previous_page
         list_of_bucketlists = []
-        bucketlists = bucketlists.items
+        bucketlists = bucketlist_pages.items
         if bucketlists:
-            for number, _ in enumerate(bucketlists):
-                list_of_bucketlists.append(get_one_bucketlist(number + 1))
+            for num, bucketlist in enumerate(bucketlists):
+                result = {}
+                items_dict = {}
+                items_list = []
+                items = Item.query.filter_by(bucketlist_id=bucketlist.id).all()
+                if items:
+                    item_id = 1
+                    for item in items:
+                        items_dict["id"] = item_id
+                        items_dict["name"] = item.name
+                        items_dict["date_modified"] = str(item.date_modified)
+                        items_dict["date_created"] = str(item.date_created)
+                        items_dict["done"] = str(item.done)
+                        items_list.append(items_dict)
+                        items_dict = {}
+                        item_id += 1
+                else:
+                    items_list.append({"message": "No items yet"})
+                result["id"] = bucketlist.user_num
+                result["name"] = bucketlist.title
+                result["description"] = bucketlist.description
+                result["items"] = items_list
+                result["date_created"] = str(bucketlist.date_created)
+                result["date_modified"] = str(bucketlist.date_modified)
+                result["created_by"] = bucketlist.created_by
+                list_of_bucketlists.append(result)
             output.update({"Bucketlists": list_of_bucketlists,
                            "Current Page": page,
                            "No. of pages": no_of_pages,
