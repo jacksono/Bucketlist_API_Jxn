@@ -104,7 +104,7 @@ class GetAllBucketLists(Resource):
         args = request.args.to_dict()
         page = int(args.get("page", 1))
         try:
-            int(args.get("limit"))
+            int(args.get("limit", 20))
         except:
             return {"message": "Error! Limit must be an integer"}
         limit = int(args.get("limit", 20))
