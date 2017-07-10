@@ -59,7 +59,7 @@ class TestUser(BaseTest):
 
     def test_error_message_if_username_contains_special_characters(self):
         """Test for a message when a username contains special characters."""
-        self.user = {"username": "user@#$", "email": "user@b.com",
+        self.user = {"username": "user@#$", "email": "user@yahoo.com",
                      "password": "password"}
         r = self.app.post("/api/v1/auth/register", data=self.user)
         self.assertEqual(r.status_code, 400)
