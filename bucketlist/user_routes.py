@@ -54,7 +54,7 @@ class UserRegister(Resource):
         if len(password) < 6:
             return {"message": "ERROR!, Password must be at"
                     " least 6 characters"}, 400
-        if validate_email(email):
+        if validate_email(email, check_mx=True):
             if username.isalnum():
                 user = User(username=username, email=email, password=password)
                 return add_user(user)
