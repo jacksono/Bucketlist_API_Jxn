@@ -218,9 +218,9 @@ class GetSingleBucketList(Resource):
            End point for returning a single bucketlist
            ---
            parameters:
-             - in: formData
+             - in: path
                name: id
-               type: int
+               type: integer
                description: The bucketlist id
                required: true
              - in: header
@@ -252,9 +252,9 @@ class UpdateBucketList(Resource):
            End point for editing a bucketlist
            ---
            parameters:
-             - in: formData
+             - in: path
                name: id
-               type: int
+               type: integer
                description: The bucketlist id
                required: true
              - in: formData
@@ -331,7 +331,7 @@ class DeleteBucketList(Resource):
            End point for deleting a bucketlist
            ---
            parameters:
-             - in: formData
+             - in: path
                name: id
                type: integer
                description: The bucketlist id

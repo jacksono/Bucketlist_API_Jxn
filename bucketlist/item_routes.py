@@ -45,6 +45,11 @@ class CreateItem(Resource):
                type: string
                description: Access token
                required: true
+             - in: path
+               name: id
+               type: integer
+               description: The item id
+               required: true
            responses:
              201:
                description: Creates a new bucketlist item
@@ -96,12 +101,12 @@ class DeleteItem(Resource):
            End point for deleting an item
            ---
            parameters:
-             - in: formData
+             - in: path
                name: item_id
-               type: int
+               type: integer
                description: The item id
                required: true
-             - in: formData
+             - in: path
                name: id
                description: The bucketlist id
                type: string
@@ -142,12 +147,12 @@ class UpdateItem(Resource):
            End point for editing an item
            ---
            parameters:
-             - in: formData
+             - in: path
                name: item_id
-               type: int
+               type: integer
                description: The item id
                required: true
-             - in: formData
+             - in: path
                name: id
                description: The bucketlist id
                type: string
@@ -218,10 +223,10 @@ class GetAllItems(Resource):
            End point for returning all items for a particular bucketlist
            ---
            parameters:
-             - in: formData
+             - in: path
                name: id
                description: The bucketlist id
-               type: string
+               type: integer
                required: true
              - in: header
                name: token
