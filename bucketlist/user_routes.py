@@ -14,8 +14,6 @@ class Home(Resource):
         """
            This is the index page with a welcome message
            ---
-           parameters:
-             - in: formData
            responses:
              200:
                description: A simple welcome message is returned
