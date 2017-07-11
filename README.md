@@ -52,6 +52,7 @@ You may use [Postman](https://chrome.google.com/webstore/detail/postman/fhbjgbif
 | `/api/v1/` | GET  | The index | FALSE |
 | `/api/v1/auth/register/` | POST  | User registration | FALSE |
 |  `/api/v1/auth/login/` | POST | User login | FALSE |
+|  `/api/v1/auth/name/` | POST | Change Username | TRUE |
 | `/api/v1/bucketlists/` | GET, POST | A user's bucket lists | TRUE |
 | `/api/v1/bucketlists/<id>/` | GET, PUT, DELETE | A single bucket list | TRUE |
 | `/api/v1/bucketlists/<id>/items/` | GET, POST | Items in a bucket list | TRUE |
