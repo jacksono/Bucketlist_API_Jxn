@@ -59,15 +59,40 @@ def get_one_bucketlist(id):
 class CreateBucketList(Resource):
     """Create a new bucketlist to the route /api/v1/auth/bucketlists/ using POST.""" # noqa
 
-    def post(self):
-        """Create a new bucketlist.
-
-        ---
+    def post(self):  # noqa
+        """
+           End point for creating a bucketlist
+           ---
+           parameters:
+             - in: formData
+               name: title
+               type: string
+               description: The bucketlist title
+               required: true
+             - in: formData
+               name: description
+               description: Description of the bucketlist
+               type: string
+               required: true
+             - in: header
+               name: token
+               type: string
+               description: Access token
+               required: true
            responses:
              201:
                description: Creates a new bucketlist
-
-        """
+               schema:
+                 id: CreateBucketlist
+                 properties:
+                   title:
+                     type: string
+                     default: Travel
+                   Description:
+                     type: string
+                     description: Places to visit
+                     default: Hawaii
+            """
         parser = reqparse.RequestParser()
         parser.add_argument(
             "title",
@@ -92,15 +117,20 @@ class CreateBucketList(Resource):
 class GetAllBucketLists(Resource):
     """Shows all bucketlists. Route: /api/v1/auth/bucketlists/ using GET."""
 
-    def get(self):
-        """Show all bucketlists.
-
-        ---
+    def get(self):  # noqa
+        """
+           End point for returning all bucketlists created by the user
+           ---
+           parameters:
+             - in: header
+               name: token
+               type: string
+               description: Access token
+               required: true
            responses:
              200:
-               description: Shows all bucketlists
-
-        """
+               description: Returns all bucketlists created by the user.
+            """
         args = request.args.to_dict()
         page = int(args.get("page", 1))
         try:
@@ -183,15 +213,31 @@ class GetAllBucketLists(Resource):
 class GetSingleBucketList(Resource):
     """Get a single bucketlist. Route /bucketlist/<id>."""
 
-    def get(self, id):
-        """Show one bucketlist.
-
-        ---
+    def get(self, id):  # noqa
+        """
+           End point for returning a single bucketlist
+           ---
+           parameters:
+             - in: path
+               name: id
+               type: integer
+               description: The bucketlist id
+               required: true
+             - in: header
+               name: token
+               type: string
+               description: Access token
+               required: true
            responses:
              200:
-               description: Shows one bucketlist
-
-        """
+               description: Returns a single bucketlist
+               schema:
+                 id: GetSingleBucketlist
+                 properties:
+                   id:
+                     type: int
+                     default: 1
+            """
         if get_bucketlist_by_id(id):
             return get_one_bucketlist(id)
         else:
@@ -201,15 +247,44 @@ class GetSingleBucketList(Resource):
 class UpdateBucketList(Resource):
     """Update a bucket list: Route: PUT /bucketlists/<id>."""
 
-    def put(self, id):
-        """Update one bucketlist.
-
-        ---
+    def put(self, id):  # noqa
+        """
+           End point for editing a bucketlist
+           ---
+           parameters:
+             - in: path
+               name: id
+               type: integer
+               description: The bucketlist id
+               required: true
+             - in: formData
+               name: title
+               type: string
+               description: New bucketlist title
+               required: true
+             - in: formData
+               name: description
+               description: New bucketlist description
+               type: string
+               required: true
+             - in: header
+               name: token
+               type: string
+               description: Access token
+               required: true
            responses:
              200:
-               description: Updates one bucketlist
-
-        """
+               description: Edits a bucketlist
+               schema:
+                 id: EditBucketlist
+                 properties:
+                   title:
+                     type: string
+                     default: Read
+                   description:
+                     type: string
+                     default: Read through the Bible
+            """
         if not get_bucketlist_by_id(id):
             return {"message": "ERROR! Cannot update a"
                     " bucketlsit that doesnot exist"}, 404
@@ -251,15 +326,25 @@ class UpdateBucketList(Resource):
 class DeleteBucketList(Resource):
     """Delete a single bucketlist. Route: DELETE /bucketlists/<id>."""
 
-    def delete(self, id):
-        """Delete one bucketlist.
-
-        ---
+    def delete(self, id):  # noqa
+        """
+           End point for deleting a bucketlist
+           ---
+           parameters:
+             - in: path
+               name: id
+               type: integer
+               description: The bucketlist id
+               required: true
+             - in: header
+               name: token
+               type: string
+               description: Access token
+               required: true
            responses:
              200:
-               description: Deletes one bucketlist
-
-        """
+               description: Deletes a bucketlist
+            """
         bucketlist = get_bucketlist_by_id(id)
         if bucketlist:
             items = Item.query.filter_by(bucketlist_id=id).all()
