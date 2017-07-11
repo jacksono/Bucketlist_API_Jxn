@@ -64,15 +64,20 @@ class CreateBucketList(Resource):
            End point for creating a bucketlist
            ---
            parameters:
-             - in: path
+             - in: formData
                name: title
                type: string
                description: The bucketlist title
                required: true
-             - in: path
+             - in: formData
                name: description
                description: Description of the bucketlist
                type: string
+               required: true
+             - in: header
+               name: token
+               type: string
+               description: Access token
                required: true
            responses:
              201:
@@ -116,6 +121,12 @@ class GetAllBucketLists(Resource):
         """
            End point for returning all bucketlists created by the user
            ---
+           parameters:
+             - in: header
+               name: token
+               type: string
+               description: Access token
+               required: true
            responses:
              200:
                description: Returns all bucketlists created by the user.
@@ -207,10 +218,15 @@ class GetSingleBucketList(Resource):
            End point for returning a single bucketlist
            ---
            parameters:
-             - in: path
+             - in: formData
                name: id
                type: int
                description: The bucketlist id
+               required: true
+             - in: header
+               name: token
+               type: string
+               description: Access token
                required: true
            responses:
              200:
@@ -236,20 +252,25 @@ class UpdateBucketList(Resource):
            End point for editing a bucketlist
            ---
            parameters:
-             - in: path
+             - in: formData
                name: id
                type: int
                description: The bucketlist id
                required: true
-             - in: path
+             - in: formData
                name: title
                type: string
                description: New bucketlist title
                required: true
-             - in: path
+             - in: formData
                name: description
                description: New bucketlist description
                type: string
+               required: true
+             - in: header
+               name: token
+               type: string
+               description: Access token
                required: true
            responses:
              200:
@@ -310,10 +331,15 @@ class DeleteBucketList(Resource):
            End point for deleting a bucketlist
            ---
            parameters:
-             - in: path
+             - in: formData
                name: id
-               type: int
+               type: integer
                description: The bucketlist id
+               required: true
+             - in: header
+               name: token
+               type: string
+               description: Access token
                required: true
            responses:
              200:

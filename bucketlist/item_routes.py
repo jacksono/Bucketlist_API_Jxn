@@ -30,15 +30,20 @@ class CreateItem(Resource):
            End point for creating a bucketlist item
            ---
            parameters:
-             - in: path
+             - in: formData
                name: name
                type: string
                description: The item name
                required: true
-             - in: path
+             - in: formData
                name: done
                description: The item status
                type: string
+               required: true
+             - in: header
+               name: token
+               type: string
+               description: Access token
                required: true
            responses:
              201:
@@ -91,15 +96,21 @@ class DeleteItem(Resource):
            End point for deleting an item
            ---
            parameters:
-             - in: path
+             - in: formData
                name: item_id
                type: int
                description: The item id
                required: true
-             - in: path
+             - in: formData
                name: id
                description: The bucketlist id
                type: string
+               required: true
+           parameters:
+             - in: header
+               name: token
+               type: string
+               description: Access token
                required: true
            responses:
              200:
@@ -131,15 +142,20 @@ class UpdateItem(Resource):
            End point for editing an item
            ---
            parameters:
-             - in: path
+             - in: formData
                name: item_id
                type: int
                description: The item id
                required: true
-             - in: path
+             - in: formData
                name: id
                description: The bucketlist id
                type: string
+               required: true
+             - in: header
+               name: token
+               type: string
+               description: Access token
                required: true
            responses:
              200:
@@ -202,10 +218,15 @@ class GetAllItems(Resource):
            End point for returning all items for a particular bucketlist
            ---
            parameters:
-             - in: path
+             - in: formData
                name: id
                description: The bucketlist id
                type: string
+               required: true
+             - in: header
+               name: token
+               type: string
+               description: Access token
                required: true
            responses:
              200:

@@ -15,7 +15,7 @@ class Home(Resource):
            This is the index page with a welcome message
            ---
            parameters:
-             - in: path
+             - in: formData
            responses:
              200:
                description: A simple welcome message is returned
@@ -32,17 +32,17 @@ class UserRegister(Resource):
            This is the register end point for creating a user account
            ---
            parameters:
-             - in: path
+             - in: formData
                name: email
                type: string
                description: The email of the to be registered
                required: true
-             - in: path
+             - in: formData
                name: username
                description: The name of the user to be created
                type: string
                required: true
-             - in: path
+             - in: formData
                name: password
                type: string
                description: The password of the user
@@ -106,12 +106,12 @@ class UserLogin(Resource):
            This is the login end point for logging in a user
            ---
            parameters:
-             - in: path
+             - in: formData
                name: email
                type: string
                description: The email address of the user
                required: true
-             - in: path
+             - in: formData
                name: password
                type: string
                description: The password of the user
@@ -162,10 +162,15 @@ class ChangeUsername(Resource):
            End point for a user to change their username
            ---
            parameters:
-             - in: path
+             - in: formData
                name: username
                type: string
                description: The user's username
+               required: true
+             - in: header
+               name: token
+               type: string
+               description: Access token
                required: true
            responses:
              200:
