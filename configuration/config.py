@@ -23,7 +23,6 @@ class DevelopmentConfig(Config):
         os.path.join(basedir, "bucketlist.db")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = os.environ['SECRET_KEY']
-    # \xcd\xefg\xb3\x08\x88\xdc1\xab\x96\x1cE\t\xd4\x17'
 
 
 class TestingConfig(Config):

@@ -59,6 +59,7 @@ class Bucketlist(db.Model):
     """Maps bucketlists table which contains bucketlist inforamtion."""
 
     id = db.Column(db.Integer, primary_key=True)
+    user_num = db.Column(db.Integer, nullable=True)
     title = db.Column(db.String(50), unique=True)
     description = db.Column(db.Text)
     date_created = db.Column(db.DateTime, default=datetime.now)

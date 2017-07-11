@@ -16,6 +16,28 @@ def create_app(configuration):
     return app
 
 
+template = {
+  "swagger": "2.0",
+  "info": {
+    "title": "BUCKETLIST API",
+    "description": "API for managing your bucketlists",
+    "contact": {
+      "responsibleDeveloper": "Jackson Onyango",
+      "email": "jackson.onyango@andela.com",
+    },
+    "version": "1.0"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "produces": ["application/x-www-form-urlencoded",
+               "application/json",
+               "application/txt"],
+  "operationId": "getmyData",
+  "content-type": "text"
+}
+
 app = create_app("development")
 api = Api(app=app, prefix="/api/v1")
-swagger = Swagger(app)
+swagger = Swagger(app, template=template)
