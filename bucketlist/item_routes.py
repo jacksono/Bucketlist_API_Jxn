@@ -25,15 +25,34 @@ def get_item_by_id(bucketlist_id, item_id):
 class CreateItem(Resource):
     """Create a new bucketlist item. Route: /bucketlists/<id>/items/."""
 
-    def post(self, id):
-        """Create a new bucketlist item.
-
-        ---
+    def post(self, id):  # noqa
+        """
+           End point for creating a bucketlist item
+           ---
+           parameters:
+             - in: path
+               name: name
+               type: string
+               description: The item name
+               required: true
+             - in: path
+               name: done
+               description: The item status
+               type: string
+               required: true
            responses:
              201:
                description: Creates a new bucketlist item
-
-        """
+               schema:
+                 id: CreateBucketlistItem
+                 properties:
+                   name:
+                     type: string
+                     default: Africa
+                   done:
+                     type: string
+                     default: Y
+            """
         parser = reqparse.RequestParser()
         parser.add_argument(
             "name",
@@ -67,15 +86,25 @@ class CreateItem(Resource):
 class DeleteItem(Resource):
     """Delete bucketlist item. Route: /bucketlists/<id>/items/<item_id>."""
 
-    def delete(self, id, item_id):
-        """Delete one bucketlist item.
-
-        ---
+    def delete(self, id, item_id):  # noqa
+        """
+           End point for deleting an item
+           ---
+           parameters:
+             - in: path
+               name: item_id
+               type: int
+               description: The item id
+               required: true
+             - in: path
+               name: id
+               description: The bucketlist id
+               type: string
+               required: true
            responses:
              200:
-               description: Deletes one bucketlist item
-
-        """
+               description: Delete an item
+            """
         if get_bucketlist_by_id(id):
             bucketlist_id = get_bucketlist_by_id(id).id
         else:
@@ -97,15 +126,25 @@ class DeleteItem(Resource):
 class UpdateItem(Resource):
     """Update a bucketlist item.Route: /bucketlists/<id>/items/<item_id>."""
 
-    def put(self, id, item_id):
-        """Update one bucketlist item.
-
-        ---
+    def put(self, id, item_id):  # noqa
+        """
+           End point for editing an item
+           ---
+           parameters:
+             - in: path
+               name: item_id
+               type: int
+               description: The item id
+               required: true
+             - in: path
+               name: id
+               description: The bucketlist id
+               type: string
+               required: true
            responses:
              200:
-               description: Update one bucketlist item
-
-        """
+               description: Edit an item
+            """
         if get_bucketlist_by_id(id):
             bucketlist_id = get_bucketlist_by_id(id).id
         else:
@@ -158,15 +197,20 @@ class UpdateItem(Resource):
 class GetAllItems(Resource):
     """Shhow all bucketlist items.Route: /bucketlists/<id>/items/."""
 
-    def get(self, id):
-        """Get all bucketlist items.
-
-        ---
+    def get(self, id):  # noqa
+        """
+           End point for returning all items for a particular bucketlist
+           ---
+           parameters:
+             - in: path
+               name: id
+               description: The bucketlist id
+               type: string
+               required: true
            responses:
              200:
-               description: Gets all bucketlist items
-
-        """
+               description: Returns all items for the bucketlist
+            """
         if get_bucketlist_by_id(id):
             bucketlist_id = get_bucketlist_by_id(id).id
         else:
