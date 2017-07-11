@@ -10,15 +10,16 @@ from bucketlist.helper_functions import add_user, user_serializer
 class Home(Resource):
     """Response to the index route using the GET method."""
 
-    def get(self):
-        """Define the home/index url.
-
-        ---
+    def get(self):  # noqa
+        """
+           This is the index page with a welcome message
+           ---
+           parameters:
+             - in: path
            responses:
              200:
-               description: The index url
-
-        """
+               description: A simple welcome message is returned
+            """
         return {"message": "This is the Bucketlist API, You are WELCOME!!. "
                 "To use the API please register or login"}
 
@@ -26,15 +27,45 @@ class Home(Resource):
 class UserRegister(Resource):
     """Register a new user to the route /api/v1/auth/register using POST."""
 
-    def post(self):
-        """Create a new user.
-
-        ---
+    def post(self):  # noqa
+        """
+           This is the register end point for creating a user account
+           ---
+           parameters:
+             - in: path
+               name: email
+               type: string
+               description: The email of the to be registered
+               required: true
+             - in: path
+               name: username
+               description: The name of the user to be created
+               type: string
+               required: true
+             - in: path
+               name: password
+               type: string
+               description: The password of the user
+               required: true
            responses:
              201:
-               description: Creates a new user
-
-        """
+               description: Create a user account
+               schema:
+                 id: Register
+                 properties:
+                   username:
+                     type: string
+                     description: The name of the user to be created
+                     default: user
+                   email:
+                     type: string
+                     description: The email of the to be registered
+                     default: user@email.com
+                   password:
+                     type: string
+                     description: The password of the user
+                     default: passw0rD
+            """
         parser = reqparse.RequestParser()
         parser.add_argument(
             "username",
@@ -70,15 +101,34 @@ class UserRegister(Resource):
 class UserLogin(Resource):
     """Log in a user to the route /api/v1/auth/login using POST."""
 
-    def post(self):
-        """Login a user.
-
-        ---
+    def post(self):  # noqa
+        """
+           This is the login end point for logging in a user
+           ---
+           parameters:
+             - in: path
+               name: email
+               type: string
+               description: The email address of the user
+               required: true
+             - in: path
+               name: password
+               type: string
+               description: The password of the user
+               required: true
            responses:
              200:
                description: Logs in a user
-
-        """
+               schema:
+                 id: Login
+                 properties:
+                   email:
+                     type: string
+                     default: user@email.com
+                   password:
+                     type: string
+                     default: passw0rD
+            """
         parser = reqparse.RequestParser()
         parser.add_argument(
             "email",
@@ -107,15 +157,27 @@ class UserLogin(Resource):
 class ChangeUsername(Resource):
     """Change user's name: Route: PUT /auth/name."""
 
-    def put(self):
-        """Change a user's name.
-
-        ---
+    def put(self):  # noqa
+        """
+           End point for a user to change their username
+           ---
+           parameters:
+             - in: path
+               name: username
+               type: string
+               description: The user's username
+               required: true
            responses:
              200:
-               description: Changes a user's name
+               description: Changes a user's username
+               schema:
+                 id: ChangeName
+                 properties:
+                   username:
+                     type: string
+                     default: user
+            """
 
-        """
         parser = reqparse.RequestParser()
         parser.add_argument(
             "username",
