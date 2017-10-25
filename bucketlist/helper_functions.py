@@ -1,7 +1,7 @@
 """Contain helper functions."""
 
 from sqlalchemy.exc import IntegrityError
-from bucketlist.app import db, app
+from app import db, app
 from flask import g, request, jsonify
 from bucketlist.models import User, Bucketlist, Item
 from flask_restful import marshal, fields

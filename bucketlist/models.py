@@ -2,7 +2,7 @@
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
-from bucketlist.app import db, app
+from app import db, app
 from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer, BadSignature, SignatureExpired)
 

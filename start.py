@@ -13,7 +13,7 @@ from bucketlist.item_routes import (CreateItem,
                                     UpdateItem,
                                     DeleteItem,
                                     GetAllItems)
-from bucketlist.app import api, app
+from app import api, app
 
 
 # Create api endpoints

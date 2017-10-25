@@ -4,7 +4,7 @@ from flask_restful import Resource, reqparse, marshal
 from bucketlist.models import Item
 from bucketlist.helper_functions import add_item, item_serializer
 from bucketlist.bucketlist_routes import get_bucketlist_by_id
-from bucketlist.app import db
+from app import db
 from datetime import datetime
 from sqlalchemy.exc import IntegrityError
 

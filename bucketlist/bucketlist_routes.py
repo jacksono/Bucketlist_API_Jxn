@@ -5,7 +5,7 @@ from bucketlist.models import Bucketlist, Item
 from bucketlist.helper_functions import (add_bucketlist,
                                          bucketlist_serializer)
 from flask import g, request
-from bucketlist.app import db
+from app import db
 from datetime import datetime
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import func

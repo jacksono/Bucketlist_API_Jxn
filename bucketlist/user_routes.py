@@ -3,7 +3,7 @@ from flask_restful import Resource, reqparse, marshal
 from flask import g
 from validate_email import validate_email
 from bucketlist.models import User
-from bucketlist.app import db
+from app import db
 from bucketlist.helper_functions import add_user, user_serializer
 
 

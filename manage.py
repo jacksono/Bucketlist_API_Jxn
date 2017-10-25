@@ -1,6 +1,6 @@
 """Migrations script to handle changes in data models."""
 
-from bucketlist.app import db, app
+from app import db, app
 from flask_script import Manager, prompt_bool
 from flask_migrate import Migrate, MigrateCommand
 from bucketlist.models import User, Bucketlist, Item # noqa

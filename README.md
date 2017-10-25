@@ -10,6 +10,8 @@
 # Bucketlist_API_Jxn
 A BucketList Application API
 This API allows you to create, edit, view and delete bucketlists and items in a bucketlist.
+Deployed at https://jxn-bucketlist.herokuapp.com/api/v1
+Documentation at: https://jxn-bucketlist.herokuapp.com/apidocs/#/default
 
 According to the [Oxford Dictionary](http://www.oxforddictionaries.com/definition/english/bucket-list),
 a *bucket list* is a *number of experiences or achievements that a person hopes
