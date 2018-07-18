@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  api:
+    build: ..
+    ports:
+      - '5000:5000'
+    depends_on:
+      - db
+
+  db:
+    build:
+      context: ../db
+      dockerfile: Dockerfile
+    ports:
+      - '5010:5432'
+    environment:
+      - POSTGRES_USER=bucket
+      - POSTGRES_PASSWORD=bucket
