@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: db-deploy2
+  labels:
+    #Project ID
+    app: medsender-playground
+spec:
+  #Run two instances of our application
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: medsender-playground
+    spec:
+      #Container details
+      containers:
+        - name: bucketlist
+          image: gcr.io/medsender-playground/db:latest
+          imagePullPolicy: Always
+          #Ports to expose
+          ports:
+          - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: "bucket"
+            - name: POSTGRES_PASSWORD
+              value: "bucket"

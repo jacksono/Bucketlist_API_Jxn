@@ -1,6 +1,6 @@
 """Contain the setup for other test cases."""
 from flask_testing import TestCase
-from bucketlist.app import db
+from app import db
 from start import app
 from bucketlist.models import User, Bucketlist, Item
 from configuration.config import app_config

@@ -82,18 +82,18 @@ class UserRegister(Resource):
                                      args["password"])
         if len(password) < 6:
             return {"message": "ERROR!, Password must be at"
-                    " least 6 characters"}, 400
-        if validate_email(email, check_mx=True):
-            if username.isalnum():
-                user = User(username=username, email=email, password=password)
-                return add_user(user)
-            else:
-                return {"message": "ERROR!, Username cannot contain"
-                        " special characters or spaces."
-                        " Please check and try again"}, 400
+                                 " least 6 characters"}, 400
+        # if validate_email(email):
+        if username.isalnum():
+            user = User(username=username, email=email, password=password)
+            return add_user(user)
         else:
-            return {"message": "ERROR!, Invalid email."
+            return {"message": "ERROR!, Username cannot contain"
+                    " special characters or spaces."
                     " Please check and try again"}, 400
+        # else:
+        #     return {"message": "ERROR!, Invalid email."
+        #             " Please check and try again"}, 400
 
 
 class UserLogin(Resource):

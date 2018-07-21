@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: bucketlist-deployment
+  labels:
+    #Project ID
+    app: medsender-playground
+spec:
+  #Run two instances of our application
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: medsender-playground
+    spec:
+      #Container details
+      containers:
+        - name: bucketlist-api
+          image: gcr.io/medsender-playground/jxn-api
+          imagePullPolicy: Always
+          #Ports to expose
+          ports:
+          - containerPort: 5000

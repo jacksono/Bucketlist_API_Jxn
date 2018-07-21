@@ -8,3 +8,6 @@
 
 # ignore coverage files
 .coverage
+
+# local scripts
+*.sh

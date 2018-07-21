@@ -19,7 +19,10 @@ class DevelopmentConfig(Config):
 
     DEBUG = True
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'postgres://rkucqtbpszbcht:dbddb343ee0459553c025beec2a7fd3849394d92bffa4d042875d8d591f1ea88@ec2-23-23-249-169.compute-1.amazonaws.com:5432/du0m2ci3k7lc1'
+    # SQLALCHEMY_DATABASE_URI = 'postgres://rkucqtbpszbcht:dbddb343ee0459553c025beec2a7fd3849394d92bffa4d042875d8d591f1ea88@ec2-23-23-249-169.compute-1.amazonaws.com:5432/du0m2ci3k7lc1'
+    # SQLALCHEMY_DATABASE_URI = 'postgres://bucket:bucket@db:5432/bucketlistdb'
+    # SQLALCHEMY_DATABASE_URI = 'postgres://bucket:bucket@35.204.108.53:5432/bucketlistdb'
+    SQLALCHEMY_DATABASE_URI = 'postgres://bucket:bucket@db-svc2/bucketlistdb'
     # SQLALCHEMY_DATABASE_URI = "sqlite:///" + \
     #     os.path.join(basedir, "bucketlist.db")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
