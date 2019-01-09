@@ -1,10 +1,8 @@
 [![Build Status](https://travis-ci.org/jacksono/Bucketlist_API_Jxn.svg?branch=develop)](https://travis-ci.org/jacksono/Bucketlist_API_Jxn)
 [![Coverage Status](https://s3.amazonaws.com/assets.coveralls.io/badges/coveralls_99.svg)](https://coveralls.io/github/jacksono/Bucketlist_API_Jxn?branch=develop)
-[![Code Issues](https://www.quantifiedcode.com/api/v1/project/8e4ded420a0c437da424430ddbca1ac3/badge.svg)](https://www.quantifiedcode.com/app/project/8e4ded420a0c437da424430ddbca1ac3)
 ![alt text](https://img.shields.io/badge/python-3.4-blue.svg)
 [![DUB](https://img.shields.io/dub/l/vibe-d.svg)]()
 [![pep 8](https://img.shields.io/badge/code%20style-Pep%208-green.svg)](https://www.python.org/dev/peps/pep-0008/)
-[![Swagger Validator](https://img.shields.io/swagger/valid/2.0/https/bitbucket.org/api/swagger.json.svg)](http://brunorocha.org/python/flask/flasgger-api-playground-with-flask-and-swagger-ui.html)
 
 
 # Bucketlist_API_Jxn
